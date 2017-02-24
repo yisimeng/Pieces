@@ -1,7 +1,13 @@
 # Pieces
 
-[私有pods仓库](https://github.com/yisimeng/Pieces/blob/master/Pieces/%E7%A7%81%E6%9C%89%E4%BB%A3%E7%A0%81%E5%BA%93.md)
+[CocoaPods相关](https://github.com/yisimeng/Pieces/tree/master/Pieces/CocoaPods)
 
-[number取整](https://github.com/yisimeng/Pieces/blob/master/Pieces/number%E5%8F%96%E6%95%B4.md)
+[ImageIO](https://github.com/yisimeng/Pieces/tree/master/Pieces/ImageIO)
 
-[VideoToolBox硬编码，硬解码](https://github.com/yisimeng/YSM-VideoToolBox/blob/master/README.md)
+[音视频相关](https://github.com/yisimeng/Pieces/tree/master/Pieces/%E9%9F%B3%E8%A7%86%E9%A2%91)
+
+[OpenGLES](https://github.com/yisimeng/Pieces/tree/master/Pieces/OpenGLES)
+
+[Tips](https://github.com/yisimeng/Pieces/blob/master/Pieces/Tips.md)
+
+[问题及解决方法](https://github.com/yisimeng/Pieces/blob/master/Pieces/%E9%97%AE%E9%A2%98.md)
