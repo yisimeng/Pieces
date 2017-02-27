@@ -1,0 +1,13 @@
+# GCD底层实现
+苹果官方文档显示:
+应用程序中编写的线程管理用的代码要在系统级实现.
+苹果的系统级别是iOS和OSX的核心XNU内核级上实现.
+
+1. 编程人员所使用的GCD的API全部为包含在libdispatch库中的C语言函数.
+2. Dispatch Queue 通过结构体和链表,被实现成FIFO队列.FIFO队列管理是通过dispatch_async等函数所追加的Block.
+3. Block 并不是直接加入FIFO队列,而是先加入Disptch_Continuation_t 类型结构体中,然后加入FIFO队列.  该Dispatch Continuation 用于记忆Block所属的Dispatch Group和其他一些信息,相当于一般常说的执行上下文.
+4. Dispatch Queue 通过dispatch_set_target_queue 函数进行设定,同时也会优先级的信息.phthread_workqueue_create_np    XNU内核持有 workqueue
+5. Dispacth 执行Block的过程. 当在Global Dispatch Queue中执行Block时,Libdispatch 从Global Dispatch Queue自身的FIFO队列中取出Dispatch Continuation,调用pthread_workqueue_additem_np函数.  将Global Dispatch Queue自身信息,符合优先级的work却也信息以及为执行Dispatch Contitnuation的回调函数等传递给参数.
+pthread_workqueue_additem_np函数使用workq_kernreturn系统调用,通过workqueue增加应当执行项目,根据该通知,XNU系统会判断是否生产线程.    
+6.workqueue 的线程执行pthread_workqueue函数,该函数调用libdispatch的回调函数.在回调函数中执行加入到DispatchContinuation的Block.
+7. blOCK 执行完了后,进行通知Dispatch Group结束,释放Dispatch Continuation等处理,开始准备执行下一个Block.
