@@ -37,3 +37,33 @@ override func pushViewController(_ viewController: UIViewController, animated: B
 }
 ```
 但是这是有问题的,刚启动就找不到tabbar了，设置rootViewController的时候也会走这个方法，导致第进来之后就直接隐藏掉tabbar了```public init(rootViewController: UIViewController) // Convenience method pushes the root view controller without animation.```
+
+---
+##### 5、图片的解压缩
+从磁盘中加载一张图片，并将它显示到屏幕上，中间的主要工作流如下：  
+1、假设我们使用 +imageWithContentsOfFile: 方法从磁盘中加载一张图片，这个时候的图片并没有解压缩；  
+2、然后将生成的 UIImage 赋值给 UIImageView；
+3、接着一个隐式的 CATransaction 捕获到了 UIImageView 图层树的变化；  
+4、在主线程的下一个 run loop 到来时，Core Animation 提交了这个隐式的 transaction ，这个过程可能会对图片进行 copy 操作，而受图片是否字节对齐等因素的影响，这个 copy 操作可能会涉及以下部分或全部步骤：  
+>  a、分配内存缓冲区用于管理文件 IO 和解压缩操作；  
+  b、将文件数据从磁盘读到内存中；  
+  c、将压缩的图片数据解码成未压缩的位图形式，这是一个非常耗时的 CPU 操作；
+  d、最后 Core Animation 使用未压缩的位图数据渲染 UIImageView 的图层。
+
+图片的解压缩是一个非常耗时的 CPU 操作，并且它默认是在主线程中执行的。那么当需要加载的图片比较多时，就会对我们应用的响应性造成严重的影响，尤其是在快速滑动的列表上，这个问题会表现得更加突出。
+
+位图就是一个像素数组，数组中的每个像素就代表着图片中的一个点。在将磁盘中的图片渲染到屏幕之前，必须先要得到图片的原始像素数据，才能执行后续的绘制操作，这就是为什么需要对图片解压缩的原因。
+
+**强制解压缩**
+图片的解压缩是不可避免的，当未解压缩的图片将要渲染到屏幕时，系统会在主线程对图片进行解压缩，而如果图片已经解压缩了，系统就不会再对图片进行解压缩。为了不让解压缩在主线程执行影响性能，可以在手动在子线程提前进行强制解压缩，强制解压缩的原理就是对图片进行重新绘制，得到一张新的解压缩后的位图。
+
+---
+##### 6、drawRect调用  
+drawRect调用的前提：
+* view第一次被加载到屏幕上  
+* 顶部的其他视图移动
+* view的hidden属性被改变
+* 手动调用了setNeedsDisplay()或者setNeedsDisplayInRect()方法   
+
+**注意：drawRect(_:)方法中的所有绘制都会进入视图的上下文，如果在drawRect(_:)外部进行绘制，必须创建自己的上下文。
+永远不要直接调用drawRect(_:)方法，如果想更新视图，调用setNeedsDisplay()，它会将view进行标记，当下一次屏幕更新周期触发drawRect(_:)时重绘。
