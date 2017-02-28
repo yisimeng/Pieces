@@ -67,3 +67,25 @@ drawRect调用的前提：
 
 **注意：drawRect(_:)方法中的所有绘制都会进入视图的上下文，如果在drawRect(_:)外部进行绘制，必须创建自己的上下文。
 永远不要直接调用drawRect(_:)方法，如果想更新视图，调用setNeedsDisplay()，它会将view进行标记，当下一次屏幕更新周期触发drawRect(_:)时重绘。
+
+---
+##### 7、Category属性问题
+不能再分类中给已有类添加存储属性，可以添加计算属性（UIView的left，right）。分类中的属性只会创建setter和getter方法，不会生成实例变量，所以在setter和getter方法中无法赋值。
+
+---
+##### 8、循环引用
+1、A强引用B，B抢引用A。  
+2、A有个属性为block，在block中又调用A（A在进入block中时，block会强引用A）。  
+3、在viewcontroller中使用timer，在dealloc中释放timer，只要timer活跃，就不会进入到dealloc。需要在viewDidDisapper中释放timer。
+
+---
+##### 9、深拷贝与浅拷贝
+集合对象copy：   
+  1、不可变对象是浅拷贝   
+  2、可变对象是单层深拷贝  
+集合对象mutableCopy：单层深拷贝   
+
+非集合对象copy：    
+1、不可变对象是浅拷贝   
+2、可变对象是深拷贝    
+非集合对象mutableCopy:深拷贝    

@@ -10,4 +10,4 @@
 5. Dispacth 执行Block的过程. 当在Global Dispatch Queue中执行Block时,Libdispatch 从Global Dispatch Queue自身的FIFO队列中取出Dispatch Continuation,调用pthread_workqueue_additem_np函数.  将Global Dispatch Queue自身信息,符合优先级的work却也信息以及为执行Dispatch Contitnuation的回调函数等传递给参数.
 pthread_workqueue_additem_np函数使用workq_kernreturn系统调用,通过workqueue增加应当执行项目,根据该通知,XNU系统会判断是否生产线程.    
 6.workqueue 的线程执行pthread_workqueue函数,该函数调用libdispatch的回调函数.在回调函数中执行加入到DispatchContinuation的Block.
-7. blOCK 执行完了后,进行通知Dispatch Group结束,释放Dispatch Continuation等处理,开始准备执行下一个Block.
+7. block 执行完了后,进行通知Dispatch Group结束,释放Dispatch Continuation等处理,开始准备执行下一个Block.
