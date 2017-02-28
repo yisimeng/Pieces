@@ -65,7 +65,7 @@ drawRect调用的前提：
 * view的hidden属性被改变
 * 手动调用了setNeedsDisplay()或者setNeedsDisplayInRect()方法   
 
-**注意：drawRect(_:)方法中的所有绘制都会进入视图的上下文，如果在drawRect(_:)外部进行绘制，必须创建自己的上下文。
+**注意：** drawRect(_:)方法中的所有绘制都会进入视图的上下文，如果在drawRect(_:)外部进行绘制，必须创建自己的上下文。
 永远不要直接调用drawRect(_:)方法，如果想更新视图，调用setNeedsDisplay()，它会将view进行标记，当下一次屏幕更新周期触发drawRect(_:)时重绘。
 
 ---
