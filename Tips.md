@@ -95,3 +95,20 @@ drawRect调用的前提：
 1、改写播放器逻辑，让播放器拿到第一个关键帧后就给予显示。
 GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器在和服务器简历连接后可以立即拿到关键帧。减少关键帧的距离，是可以改善画质，让播放器快速拿到关键帧，但同时增加了宽带和网络的负载，如果网络不佳，不能快速下载到GOP，会影响体验。
 2、提前做好DNS解析，和做好测速选线（择取最有线路）。
+
+---
+##### 11、图片拉伸的几种方式
+1、通过UIImage的方法```- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode```来设置图片的可拉伸区域。
+2、如果是通过Assets添加的图片，则可以在Assets.xcassets中需要设置拉伸的图片，点击右下角的**Show Slicing**，在页面中可视化的去拖动拉伸的区域。
+3、CALyaer有个contentsCenter的属性，这是一个CGRect，定义了一个固定的边框和一个在图层上可拉伸的区域，值是0.0-1.0。在Interface Builder中为Stretching属性。
+<img src="images/5A0B0C3C-045B-446C-8FF8-F0A970B45766.png" width = "250" height = "419" alt="图片名称">
+
+---
+##### 12、+load()与+initialize()方法
+**调用时机**
+* +load()方法：官方文档上说Invoked whenever a class or category is added to the Objective-C runtime;，意思是说当类被加载到runtime的时候就会运行，也就是说是在main.m之前~会根据Compile Sources中的顺序来加载，但还有一个需注意的加载顺序。
+* +initialize()方法：官方文档上说Initializes the class before it receives its first message.意思是在类接收第一条消息之前初始化类。值得注意的点是：类初始化的时候每个类只会调用一次+initialize()，如果子类没有实现+initialize()，那么将会调用父类的+initialize()，也就是意味着父类的+initialize()可能会被多次调用。
+
+**使用场景：**
+* +load():通常用来进行Method Swizzle，尽量避免过于复杂以及不必要的代码。
+* +initialize():一般用于初始化全局变量或静态变量。
