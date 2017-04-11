@@ -75,7 +75,25 @@ typedef uint16_t mask_t;
 **类的方法为什么存成一个数组，而不是散列表**
 * 散列表是无序的，OC方法列表是有序的，OC查找方法是会顺着list依次寻找，并且category方法的优先级高于本身，所以要保证category方法在前面。如果用hash，则顺序无法保证。（同时解释了为什么category的方法优先级高）
 * 散列表是有空槽的，会浪费空间。
-* list的方法还保存了除了selector和imp之外其他很多属性。（**未能理解**）
+* list的方法还保存了除了selector和imp之外其他属性。（**下面代码**）
+
+```
+struct objc_cache {
+    uintptr_t mask;            /* total = mask + 1 */
+    uintptr_t occupied;
+    cache_entry *buckets[1];
+};
+typedef struct {
+    SEL name;     // same layout as struct old_method
+    void *unused;
+    IMP imp;  // same layout as struct old_method
+} cache_entry;
+```
+
+**类的方法列表是数组，缓存列表是散列表**
+
+* 类的方法列表是数组，需要保证顺序。
+* 方法缓存是散列表，要保证效率，检索快。
 
 ## SEL与IMP，Method等
 **SEL：**是用字符串表示的某个对象的方法（虚拟表中指向某个函数指针的字符串）
