@@ -19,6 +19,34 @@ struct objc_class {
 };
 ```
 
+## 关于isa的理解
+
+![ios-runtime-class](../images/ios-runtime-class.png)
+
+```
+struct category_t {
+    const char *name;
+    classref_t cls;
+    struct method_list_t *instanceMethods;
+    struct method_list_t *classMethods;
+    struct protocol_list_t *protocols;
+    struct property_list_t *instanceProperties;
+    method_list_t *methodsForMeta(bool isMeta) {
+        if (isMeta) return classMethods;
+        else return instanceMethods;
+    }
+    property_list_t *propertiesForMeta(bool isMeta) {
+        if (isMeta) return nil; // classProperties;
+        else return instanceProperties;
+    }
+};
+```
+
+* 由上图可知：实例变量的isa指向的是类，而类的isa指向的是元类（metaClass）。
+* 由代码可知：isMeta为YES，返回的是classMethods，反之返回instanceMethods。
+
+由此分析：**实例方法存放在类中，由类结构体可以看出。而类方法存放在元类（metaClass）里。
+
 ## 方法缓存 struct objc_cache *cache
 
 类的所有缓存都存在metaclass上，所以每个类都只有一份方法缓存，而不是每一个类的object都保存一份。
@@ -90,12 +118,18 @@ typedef struct {
 } cache_entry;
 ```
 
-**类的方法列表是数组，缓存列表是散列表**
+**方法列表是数组，缓存列表是散列表**
 
 * 类的方法列表是数组，需要保证顺序。
 * 方法缓存是散列表，要保证效率，检索快。
 
+经测试：当存在Category中的方法和类中方法名相同时，Category的方法总是排在类中的方法之前。（这就是Cagegory方法的优先级高于类中方法的原因）。
+
+方法列表的顺序部分和load的顺序有关，先是方法，然后是getter、setter方法。如果方法重名，category方法在前。
+
+
 ## SEL与IMP，Method等
+
 **SEL：**是用字符串表示的某个对象的方法（虚拟表中指向某个函数指针的字符串）
 
 **IMP：**表示的是指向函数实现的指针。
