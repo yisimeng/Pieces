@@ -42,7 +42,7 @@ void _dispatch_once(dispatch_once_t *predicate, DISPATCH_NOESCAPE dispatch_block
 ```
 首先判断参数predicate是否不等于```~0l（-1）```，如果为YES，则表明当前为第一次执行，那么就直接执行block，否则就会执行一个```dispatch_compiler_barrier()```，这是一个do-while(0)的一次循环，目前还不清楚这是要做什么。
 
-经测试，onceToken一共有三个值，nil、140734545356784（不定值，可能会变）和-1，生命onceToken时为nil，第一次进入dispatch_once方法中执行时为140734545356784，当dispatch_once方法执行完成之后设置为-1。
+经测试，onceToken一共有三个值，nil、140734545356784（不定值，可能会变）和-1，声明onceToken时为nil，第一次进入dispatch_once方法中执行时为140734545356784，当dispatch_once方法执行完成之后设置为-1。
 
 猜测，首先根据-1判断是否执行过block，根据140734545356784判断是否正在执行当中，执行中时，会等待返回。
 
@@ -61,5 +61,7 @@ dispatch queue 不是线程，可以管理多个线程。
 ### 自己创建的队列和系统的队列
 
 事实上，我们自己创建的队列最终会放到系统提供的主队列和四个全局的并发队列上执行。这种操作叫做 Target queues。具体来说，我们创建的串行队列的 target queue 就是系统的主队列，我们创建的并行队列的 target queue 默认是系统 default 优先级的全局并行队列。所有放在我们创建的队列中的任务，最终都会到 target queue 中完成真正的执行。
+
+如果需要多个block同时执行，要确保队列是并发的。**注意：**如果一个队列的target queue是串行（非并发），那么他也会转换成一个串行队列。
 
 通过我们自己创建的队列，以及 dispatch_set_target_queue 和 barrier 等操作，可以实现比较复杂的任务之间的同步。
