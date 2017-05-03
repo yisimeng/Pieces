@@ -140,3 +140,58 @@ typedef struct {
 **Ivar:**实例变量
 
 **property:**实例变量+setter+getter
+
+## 关联属性
+
+### 方法
+
+* objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)
+* objc_getAssociatedObject(id object, const void *key)：获取对象关联值
+* objc_removeAssociatedObjects(id object)：移除对象的所有关联
+
+```
+object: 目标对象
+key：键
+value：关联值
+policy：关联策略
+```
+
+### 关联策略
+
+objc_AssociationPolicy：一共有以下几种关联策略。
+
+```
+typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
+    OBJC_ASSOCIATION_ASSIGN = 0,           /**< Specifies a weak reference to the associated object. */
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /**< Specifies a strong reference to the associated object.
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /**< Specifies that the associated object is copied.
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_RETAIN = 01401,       /**< Specifies a strong reference to the associated object.
+                                            *   The association is made atomically. */
+    OBJC_ASSOCIATION_COPY = 01403          /**< Specifies that the associated object is copied.
+                                            *   The association is made atomically. */
+};
+```
+
+分别就是：assign,nonatomic retain,notatomic copy, retain, copy。
+
+### 内部剖析
+
+```
+class AssociationsManager {
+    AssociationsHashMap &associations() //hash map，所有的关联引用，对象指针 -> PtrPtrHashMap.
+};
+
+//关联
+class ObjcAssociation {
+    uintptr_t policy()  //策略
+    id value()  //值
+};
+```
+
+系统管理着一个关联管理者AssociationsManager，AssociationsManager内部有个AssociationsHashMap属性，这是一个hashmap，以对象指针为key，以“这个对象所有的关联引用map”对象为value，“这个对象所有的关联引用map”是以设置的key为关联键，以ObjcAssociation为值，ObjcAssociation包涵关联值和策略。
+
+> **问题思考：用runtime 关联一个属性，这个属性什么时候释放?**
+>当直接调用objc_removeAssociatedObjects方法时。
+>当销毁对象的时候，会调用objc_destructInstance方法，最终还是会调用移除关联对象的方法。
