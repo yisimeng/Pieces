@@ -123,3 +123,32 @@ GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器�
 “Content Compression Resistance Priority”，也叫内容压缩阻力优先级，该优先级越高，则越晚轮到被压缩。
 
 “Content Hugging Priority”，也叫内容紧靠优先级，该优先级越高，这越晚轮到被拉伸。
+
+---
+
+##### 14、滚动时回收键盘
+
+当ScrollView滚动时将键盘回收，通过设置UIScrollViewKeyboardDismissMode属性设置。
+```
+typedef NS_ENUM(NSInteger, UIScrollViewKeyboardDismissMode) {
+    UIScrollViewKeyboardDismissModeNone,
+    UIScrollViewKeyboardDismissModeOnDrag,      // dismisses the keyboard when a drag begins
+    UIScrollViewKeyboardDismissModeInteractive, // the keyboard follows the dragging touch off screen, and may be pulled upward again to cancel the dismiss
+} NS_ENUM_AVAILABLE_IOS(7_0);
+```
+
+---
+
+##### 15、设置UIView的透明度，影响subView的透明度
+
+解决方案：设置background color的颜色中的透明度。
+
+---
+
+##### 16、在工程中查看是否使用 IDFA
+
+打开终端，到工程目录中， 输入：
+
+grep -r advertisingIdentifier .
+
+可以看到那些文件中用到了IDFA，如果用到了就会被显示出来。
