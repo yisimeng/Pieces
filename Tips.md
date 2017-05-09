@@ -152,3 +152,212 @@ typedef NS_ENUM(NSInteger, UIScrollViewKeyboardDismissMode) {
 grep -r advertisingIdentifier .
 
 可以看到那些文件中用到了IDFA，如果用到了就会被显示出来。
+
+---
+
+##### 17、删除NSUserDefaults所有记录
+```
+//方法一
+NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+
+//方法二
+NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
+NSDictionary * dict = [defs dictionaryRepresentation];
+for (id key in dict){
+    [defs removeObjectForKey:key];
+}
+[defs synchronize];
+```
+
+---
+
+##### 18、取图片某一像素点的颜色
+```
+- (UIColor *)colorAtPixel:(CGPoint)point{
+    if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), point)){
+        return nil;
+    }
+
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    int bytesPerPixel = 4;
+    int bytesPerRow = bytesPerPixel * 1;
+    NSUInteger bitsPerComponent = 8;
+    unsigned char pixelData[4] = {0, 0, 0, 0};
+
+    CGContextRef context = CGBitmapContextCreate(pixelData,
+                                                 1,
+                                                 1,
+                                                 bitsPerComponent,
+                                                 bytesPerRow,
+                                                 colorSpace,
+                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    CGContextSetBlendMode(context, kCGBlendModeCopy);
+
+    CGContextTranslateCTM(context, -point.x, point.y - self.size.height);
+    CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), self.CGImage);
+    CGContextRelease(context);
+
+    CGFloat red   = (CGFloat)pixelData[0] / 255.0f;
+    CGFloat green = (CGFloat)pixelData[1] / 255.0f;
+    CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
+    CGFloat alpha = (CGFloat)pixelData[3] / 255.0f;
+
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+```
+
+---
+
+##### 19、UIImage占用内存大小
+```
+UIImage *image = [UIImage imageNamed:@"aa"];
+NSUInteger size  = CGImageGetHeight(image.CGImage) * CGImageGetBytesPerRow(image.CGImage);
+```
+
+---
+
+###### 20、计算字符串长度
+```
+//方法一：
+- (int)convertToInt:(NSString*)strtemp{
+    int strlength = 0;
+    char* p = (char*)[strtemp cStringUsingEncoding:NSUnicodeStringEncoding];
+    for (int i=0 ; i（[strtemp lengthOfBytesUsingEncoding:NSUnicodeStringEncoding] ;i++){
+        if (*p){
+            p++;
+            strlength++;
+        }else{
+            p++;
+        }
+    }
+    return strlength;
+}
+
+//方法二：
+-(NSUInteger) unicodeLengthOfString: (NSString *) text{
+    NSUInteger asciiLength = 0;
+    for (NSUInteger i = 0; i ( text.length; i++){
+        unichar uc = [text characterAtIndex: i];
+        asciiLength += isascii(uc) ? 1 : 2;
+    }
+    return asciiLength;
+}
+```
+
+---
+
+##### 21、检测字符串是否包含汉字
+```
++ (BOOL)checkIsChinese:(NSString *)string{
+    for (int i=0; i(string.length; i++){
+        unichar ch = [string characterAtIndex:i];
+        if (0x4E00 (= ch  && ch (= 0x9FA5){
+            return YES;
+        }
+    }
+    return NO;
+}
+```
+
+---
+
+##### 22、获取手机已安装的应用
+```
+Class c =NSClassFromString(@"LSApplicationWorkspace");
+id s = [(id)c performSelector:NSSelectorFromString(@"defaultWorkspace")];
+NSArray *array = [s performSelector:NSSelectorFromString(@"allInstalledApplications")];
+for (id item in array){
+    NSLog(@"%@",[item performSelector:NSSelectorFromString(@"applicationIdentifier")]);
+    //NSLog(@"%@",[item performSelector:NSSelectorFromString(@"bundleIdentifier")]);
+    NSLog(@"%@",[item performSelector:NSSelectorFromString(@"bundleVersion")]);
+    NSLog(@"%@",[item performSelector:NSSelectorFromString(@"shortVersionString")]);
+}
+```
+
+---
+
+##### 23、判断两个日期是否在同一周 写在NSDate的category里面
+```
+- (BOOL)isSameDateWithDate:(NSDate *)date{
+    //日期间隔大于七天之间返回NO
+    if (fabs([self timeIntervalSinceDate:date]) >= 7 * 24 *3600){
+        return NO;
+    }
+
+    NSCalendar *calender = [NSCalendar currentCalendar];
+    calender.firstWeekday = 2;//设置每周第一天从周一开始
+    //计算两个日期分别为这年第几周
+    NSUInteger countSelf = [calender ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitYear forDate:self];
+    NSUInteger countDate = [calender ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitYear forDate:date];
+
+    //相等就在同一周，不相等就不在同一周
+    return countSelf == countDate;
+}
+```
+
+---
+
+##### 24、数字格式化输出
+```
+//通过NSNumberFormatter，同样可以设置NSNumber输出的格式。例如如下代码：
+NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+formatter.numberStyle = NSNumberFormatterDecimalStyle;
+NSString *string = [formatter stringFromNumber:[NSNumber numberWithInt:123456789]];
+NSLog(@"Formatted number string:%@",string);
+//输出结果为：[1223:403] Formatted number string:123,456,789
+
+//其中NSNumberFormatter类有个属性numberStyle，它是一个枚举型，设置不同的值可以输出不同的数字格式。该枚举包括：
+typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
+    NSNumberFormatterNoStyle = kCFNumberFormatterNoStyle,
+    NSNumberFormatterDecimalStyle = kCFNumberFormatterDecimalStyle,
+    NSNumberFormatterCurrencyStyle = kCFNumberFormatterCurrencyStyle,
+    NSNumberFormatterPercentStyle = kCFNumberFormatterPercentStyle,
+    NSNumberFormatterScientificStyle = kCFNumberFormatterScientificStyle,
+    NSNumberFormatterSpellOutStyle = kCFNumberFormatterSpellOutStyle
+};
+//各个枚举对应输出数字格式的效果如下：其中第三项和最后一项的输出会根据系统设置的语言区域的不同而不同。
+[1243:403] Formatted number string:123456789
+[1243:403] Formatted number string:123,456,789
+[1243:403] Formatted number string:￥123,456,789.00
+[1243:403] Formatted number string:-539,222,988%
+[1243:403] Formatted number string:1.23456789E8
+[1243:403] Formatted number string:一亿二千三百四十五万六千七百八十九
+```
+
+---
+
+##### 25、navigationBar根据滑动距离的渐变色实现
+```
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGFloat offsetToShow = 200.0;//滑动多少就完全显示
+    CGFloat alpha = 1 - (offsetToShow - scrollView.contentOffset.y) / offsetToShow;
+    [[self.navigationController.navigationBar subviews] objectAtIndex:0].alpha = alpha;
+}
+```
+
+---
+
+##### 26、NSString进行URL编码和解码
+```
+NSString *string = @"http://abc.com?aaa=你好&bbb=tttee";
+
+//编码 打印：http://abc.com?aaa=%E4%BD%A0%E5%A5%BD&bbb=tttee
+string = [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+
+//解码 打印：http://abc.com?aaa=你好&bbb=tttee
+string = [string stringByRemovingPercentEncoding];
+```
+
+---
+
+##### 27、获取UIColor的RGBA值
+```
+UIColor *color = [UIColor colorWithRed:0.2 green:0.3 blue:0.9 alpha:1.0];
+const CGFloat *components = CGColorGetComponents(color.CGColor);
+NSLog(@"Red: %.1f", components[0]);
+NSLog(@"Green: %.1f", components[1]);
+NSLog(@"Blue: %.1f", components[2]);
+NSLog(@"Alpha: %.1f", components[3]);
+```
