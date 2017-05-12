@@ -361,3 +361,20 @@ NSLog(@"Green: %.1f", components[1]);
 NSLog(@"Blue: %.1f", components[2]);
 NSLog(@"Alpha: %.1f", components[3]);
 ```
+
+---
+
+##### 28、swift字面量初始化
+
+swift定义了以下协议，这些协议可以使一种类型通过字面量的方式来初始化并赋值。
+```
+NilLiteralConvertible
+BooleanLiteralConvertible
+IntegerLiteralConvertible
+FloatLiteralConvertible
+UnicodeScalarLiteralConvertible
+ExtendedGraphemeClusterLiteralConvertible
+StringLiteralConvertible
+ArrayLiteralConvertible
+DictionaryLiteralConvertible
+```
