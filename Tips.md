@@ -45,10 +45,10 @@ override func pushViewController(_ viewController: UIViewController, animated: B
 2、然后将生成的 UIImage 赋值给 UIImageView；
 3、接着一个隐式的 CATransaction 捕获到了 UIImageView 图层树的变化；
 4、在主线程的下一个 run loop 到来时，Core Animation 提交了这个隐式的 transaction ，这个过程可能会对图片进行 copy 操作，而受图片是否字节对齐等因素的影响，这个 copy 操作可能会涉及以下部分或全部步骤：
->  a、分配内存缓冲区用于管理文件 IO 和解压缩操作；
-  b、将文件数据从磁盘读到内存中；
-  c、将压缩的图片数据解码成未压缩的位图形式，这是一个非常耗时的 CPU 操作；
-  d、最后 Core Animation 使用未压缩的位图数据渲染 UIImageView 的图层。
+*  a、分配内存缓冲区用于管理文件 IO 和解压缩操作；
+*  b、将文件数据从磁盘读到内存中；
+*  c、将压缩的图片数据解码成未压缩的位图形式，这是一个非常耗时的 CPU 操作；
+*  d、最后 Core Animation 使用未压缩的位图数据渲染 UIImageView 的图层。
 
 图片的解压缩是一个非常耗时的 CPU 操作，并且它默认是在主线程中执行的。那么当需要加载的图片比较多时，就会对我们应用的响应性造成严重的影响，尤其是在快速滑动的列表上，这个问题会表现得更加突出。
 
@@ -89,6 +89,10 @@ drawRect调用的前提：
 1、不可变对象是浅拷贝
 2、可变对象是深拷贝
 非集合对象mutableCopy:深拷贝
+
+* [immutableObject copy] 浅拷贝
+* [mutableObject copy] 深拷贝
+* [object mutableCopy] 深拷贝
 
 ---
 ##### 10、视频直播秒开
@@ -378,3 +382,16 @@ StringLiteralConvertible
 ArrayLiteralConvertible
 DictionaryLiteralConvertible
 ```
+
+---
+
+##### 29、iOS系统自带悬浮调试框
+
+在 AppDelegate 的 didFinishLaunchingWithOptions 方法中加入两行代码即可。
+```
+let overlayClass = NSClassFromString("UIDebuggingInformationOverlay") as? UIWindow.Type
+_ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
+```
+运行程序后，两根手指点击状态栏即可调起这个调试的悬浮层。
+
+[具体使用教程](http://swift.gg/2017/05/27/ui-debugging-information-overlay/)
