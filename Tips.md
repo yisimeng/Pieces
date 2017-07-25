@@ -395,3 +395,16 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 运行程序后，两根手指点击状态栏即可调起这个调试的悬浮层。
 
 [具体使用教程](http://swift.gg/2017/05/27/ui-debugging-information-overlay/)
+
+---
+
+##### 30、监听系统时间的三个通知
+
+**NSSystemTimeZoneDidChangeNotification：**监听修改时间界面的两个按钮状态变化
+**UIApplicationSignificantTimeChangeNotification：** 监听用户改变时间 （只要点击自动设置按钮就会调用） **NSSystemClockDidChangeNotification：** 监听用户修改时间（时间不同才会调用）
+
+---
+
+##### 31、UITableView的headerView/footerView的高度问题
+
+开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下tableView.tableFooterView = 更改过高度的view。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
