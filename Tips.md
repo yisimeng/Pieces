@@ -408,3 +408,15 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 ##### 31、UITableView的headerView/footerView的高度问题
 
 开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下tableView.tableFooterView = 更改过高度的view。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
+
+---
+
+##### 32、自定义聊天输入框弹出键盘修改frame
+
+注册通知监听键盘将要改变的高度（UIKeyboardWillChangeFrame）。
+
+保持输入框始终在键盘上方：
+
+**初始状态**: inputTextView.top = kDeviceHeight-inputTextView.height-kNavBarHeight
+
+**弹出状态**: inputTextView.top = kDeviceHeight-inputTextView.height-kNavBarHeight-keyBoardHeight
