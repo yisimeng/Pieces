@@ -73,8 +73,11 @@ Xcode打包app生成ipa文件，通过iTunes或者蒲公英等第三方发布平
 6. 安装app时，iOS设备取得证书，使用内置的Apple私钥去验证Cer及```embedded.mobileprovision```文件。
 7. 保证Cer及```embedded.mobileprovision```是经过苹果认证之后，从Cer中取出Mac公钥，验证APP签名，及设备id列表、权限开关是否对应。
 
-> 注：其他人想要编译签名App时应怎么做? 
+> 1. 其他人想要编译签名App时应怎么做? 
 >> 简单就是把私钥给他。私钥也是从 钥匙串 中导出，就是```.p12```文件，其他Mac导入私钥后就可以正常使用了。
+
+> 2. 查看ipa包中注册的设备ID
+>> 解压.ipa文件，得到app数据包，显示包内容，找到```embedded.mobileprovision```文件所在目录，运行命令```security cms -D -i embedded.mobileprovision```
 
 名词概念：
 1. 证书请求文件（CertificateSigningRequest.certSigningRequest）：本地公钥。
