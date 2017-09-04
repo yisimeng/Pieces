@@ -11,3 +11,5 @@
 6、[工程警告修复](http://www.cocoachina.com/ios/20170601/19396.html)修复项目中的警告，[警告和宏对应关系查询表](http://fuckingclangwarnings.com/)
 
 7、[iOS10跳转系统设置](http://www.cocoachina.com/ios/20170601/19401.html)
+
+8、[离开北京3年后，我真的后悔了](http://mp.weixin.qq.com/s/a8wrNBkEl1AMdShNz6pTYA)
