@@ -13,3 +13,5 @@
 7、[iOS10跳转系统设置](http://www.cocoachina.com/ios/20170601/19401.html)
 
 8、[离开北京3年后，我真的后悔了](http://mp.weixin.qq.com/s/a8wrNBkEl1AMdShNz6pTYA)
+
+9、[通用链接](http://www.cocoachina.com/ios/20170818/20290.html)
