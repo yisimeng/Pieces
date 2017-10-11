@@ -414,7 +414,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 ##### 30、监听系统时间的三个通知
 
 * **NSSystemTimeZoneDidChangeNotification：**监听修改时间界面的两个按钮状态变化
-* **UIApplicationSignificantTimeChangeNotification：** 监听用户改变时间 （只要点击自动设置按钮就会调用） 
+* **UIApplicationSignificantTimeChangeNotification：** 监听用户改变时间 （只要点击自动设置按钮就会调用）,新的一天开始或者时区变化。 
 * **NSSystemClockDidChangeNotification：** 监听用户修改时间（时间不同才会调用）
 
 ---
