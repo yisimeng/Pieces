@@ -42,9 +42,9 @@ I帧、P帧、B帧都是被封装成一个或者多个NALU进行传输或者存�
 ，继续移动指针查找到下一个startCode，来确定当前数据集合的长度，并拷贝数据信息。
 
 2. 解析获取的数据信息，startCode之后的第一个字节保存的是NALU的类型信息。将其转为二进制后：
->第1位：值为1，表示语法出错。
->第2~3位：参考级别。
->第4~8位：NALU类型。
+	>1. 第1位：值为1，表示语法出错。
+	>2. 第2~3位：参考级别。
+	>3. 第4~8位：NALU类型。
 3. 通过上一步解析出来的sps和pps的信息，创建视频描述CMFormatDescriptionRef，再根据CMFormatDescriptionRef创建生成解码会话VTDecompressionSessionRef。
 4. 读取到视频数据信息后，进行解码。创建CMBlockBufferRef（存放视频图像数据），使用解码会话进行解码，获取解码后的信息存放到CVPixelBufferRef中，通过系统的AVSampleBufferDisplayLayer预览，或者生成图像，通过imageView显示，或者使用OpenGL显示。
 
