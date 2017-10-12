@@ -22,10 +22,13 @@ I帧、P帧、B帧都是被封装成一个或者多个NALU进行传输或者存�
 **H.264编码流程：**
 
 1. 初始化文件写入对象（NSFileHandle），设置文件存储路径.
-2. 初始化压缩会话（VTCompressionSessionRef），设置视频的压缩转换格式（h.264），帧率、码率，帧间隔等转换信息（配置转换器）。
+2. 初始化压缩会话（VTCompressionSessionRef），设置视频的压缩转换格式（h.264），帧率、码率，帧间隔等转换信息（配置转换器），以及压缩完成回调方法（VTCompressionOutputCallback）。
 3. 通过摄像头采集画面，通过 ```- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection``` 方法传回sampleBuffer，sampleBuffer中存放了视频画面信息。
-4. 将摄像头采集到的画面传入压缩session，按照h.264的压缩算法进行压缩，转换完成后会通过创建VTCompressionSessionRef是的方法中的回调方法传出压缩转换后的sampleBuffer。
-5. 获取到转换后的sampleBuffer,按照h.264的编码格式进行编码写入文件。
+4. 将视频信息传给压缩session，按照h.264格式的压缩算法进行压缩，转换后为h.264格式的视频数据，通过session初始化传入的回调方法输出压缩后的h.264格式的sampleBuffer。
+5. 获取到转换后的sampleBuffer，按照h.264的编码格式进行编码写入文件。
+
+>1. 判断是否是关键帧，在关键帧前面添加sps和pps数据。
+>2. 编码图像数据区域：此时NALU的前四个字节存放的不是startCode，而是当前的帧长度。通过指针偏移读取NALU的数据信息，并持续写入文件。
 
 **关键帧**
 
@@ -35,7 +38,7 @@ I帧、P帧、B帧都是被封装成一个或者多个NALU进行传输或者存�
 **VideoToolBox硬解码（h264）:**
 
 1. 读取数据到buffer中，通过startCode“00 00 00 01”定位起始位置
-![](https://cl.ly/0z1f3z0a3s2M/download/Pasted%20Graphic%203.tiff)
+![](../images/compareStartCode.tiff)
 ，继续移动指针查找到下一个startCode，来确定当前数据集合的长度，并拷贝数据信息。
 
 2. 解析获取的数据信息，startCode之后的第一个字节保存的是NALU的类型信息。将其转为二进制后：
@@ -63,4 +66,4 @@ typedef enum {
     NALU_TYPE_FILL     = 12,
 } NaluType;
 ```
-![](https://cl.ly/1I0q1u0U0i1z/download/NAL%E5%8D%95%E5%85%83%E7%B1%BB%E5%9E%8B.png)
+![](../images/nal单元类型.png)
