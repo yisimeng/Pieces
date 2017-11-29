@@ -460,3 +460,21 @@ ld: warning: directory not found for option '-F/Applications/Xcode.app/Contents/
 
 * xib的cell没有注册。 
 * 内存中已经有这个cell的缓存了(也就是说通过你的cellId找到的cell并不是你想要的类型)，这时候需要改下cell的标识
+
+---
+
+##### 36、Other Linker Flags的作用
+
+苹果官方Q&A的一段话：
+
+> The "selector not recognized" runtime exception occurs due to an issue between the implementation of standard UNIX static libraries, the linker and the dynamic nature of Objective-C. Objective-C does not define linker symbols for each function (or method, in Objective-C) - instead, linker symbols are only generated for each class. If you extend a pre-existing class with categories, the linker does not know to associate the object code of the core class implementation and the category implementation. This prevents objects created in the resulting application from responding to a selector that is defined in the category.
+
+OC 的链接器不会给**每个方法**都建立符号表，而只是为**类**建立符号表。
+
+如果在静态库中为一个**已存在的类**定义了category，链接器就会认为类已经存在，而不会把category和核心类的代码结合起来。因此会导致最终的可执行文件中，缺少category的代码，最终导致方法调用失败。报错信息一般为： unrecognized selector to instance 0xXXXXXXXX.
+
+Other Linker Flags 的三个参数：```-Objc```,```-all_load```,```-force_load```。
+
+* ```-ObjC```: 链接器会将静态库中所有的Objective-C类和category都加载到可执行文件中，这样会因为加载了很多不必要的文件而导致可执行文件增大。
+* ```-all_load```（**慎用**）: 链接器会把所有找到的目标文件都加载到可执行文件中。如果项目中不止一个静态库文件，然后又使用的本参数。因为不同的库文件中有可能存在相同的文件，所以有可能会遇到```ld: duplicate symbol```错误，因此在```-ObjC```失效的情况下使用```-force_load```.
+* ```-force_load```: 与-all_load相同，只是在不同库存在相同文件的情况下，只是会加载一个文件，不影响其他文件的按需加载.
