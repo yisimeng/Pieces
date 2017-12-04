@@ -10,7 +10,7 @@
 
 6. [自动国际化](http://www.cocoachina.com/ios/20170919/20594.html)
 
-7. [工程警告修复](http://www.cocoachina.com/ios/20170601/19396.html)修复项目中的警告，[警告和宏对应关系查询表](http://fuckingclangwarnings.com/)
+7. [工程警告修复](http://www.cocoachina.com/ios/20170601/19396.html)，修复项目中的警告，[警告和宏对应关系查询表](http://fuckingclangwarnings.com/)
 
 8. [iOS10跳转系统设置](http://www.cocoachina.com/ios/20170601/19401.html)
 
@@ -19,4 +19,5 @@
 10. [通用链接](http://www.cocoachina.com/ios/20170818/20290.html)
 
 11. [关于 Other Linker Flags](http://blog.csdn.net/meegomeego/article/details/19343423)
+12. [面试题-阿里P6](http://www.cocoachina.com/ios/20171129/21362.html)
 
