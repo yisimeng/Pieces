@@ -170,115 +170,7 @@ grep -r advertisingIdentifier .
 
 ---
 
-##### 17、删除NSUserDefaults所有记录
-```
-//方法一
-NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
-
-//方法二
-NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
-NSDictionary * dict = [defs dictionaryRepresentation];
-for (id key in dict){
-    [defs removeObjectForKey:key];
-}
-[defs synchronize];
-```
-
----
-
-##### 18、取图片某一像素点的颜色
-```
-- (UIColor *)colorAtPixel:(CGPoint)point{
-    if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), point)){
-        return nil;
-    }
-
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    int bytesPerPixel = 4;
-    int bytesPerRow = bytesPerPixel * 1;
-    NSUInteger bitsPerComponent = 8;
-    unsigned char pixelData[4] = {0, 0, 0, 0};
-
-    CGContextRef context = CGBitmapContextCreate(pixelData,
-                                                 1,
-                                                 1,
-                                                 bitsPerComponent,
-                                                 bytesPerRow,
-                                                 colorSpace,
-                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
-    CGColorSpaceRelease(colorSpace);
-    CGContextSetBlendMode(context, kCGBlendModeCopy);
-
-    CGContextTranslateCTM(context, -point.x, point.y - self.size.height);
-    CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), self.CGImage);
-    CGContextRelease(context);
-
-    CGFloat red   = (CGFloat)pixelData[0] / 255.0f;
-    CGFloat green = (CGFloat)pixelData[1] / 255.0f;
-    CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
-    CGFloat alpha = (CGFloat)pixelData[3] / 255.0f;
-
-    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-}
-```
-
----
-
-##### 19、UIImage占用内存大小
-```
-UIImage *image = [UIImage imageNamed:@"aa"];
-NSUInteger size  = CGImageGetHeight(image.CGImage) * CGImageGetBytesPerRow(image.CGImage);
-```
-
----
-
-###### 20、计算字符串长度
-```
-//方法一：
-- (int)convertToInt:(NSString*)strtemp{
-    int strlength = 0;
-    char* p = (char*)[strtemp cStringUsingEncoding:NSUnicodeStringEncoding];
-    for (int i=0 ; i（[strtemp lengthOfBytesUsingEncoding:NSUnicodeStringEncoding] ;i++){
-        if (*p){
-            p++;
-            strlength++;
-        }else{
-            p++;
-        }
-    }
-    return strlength;
-}
-
-//方法二：
--(NSUInteger) unicodeLengthOfString: (NSString *) text{
-    NSUInteger asciiLength = 0;
-    for (NSUInteger i = 0; i ( text.length; i++){
-        unichar uc = [text characterAtIndex: i];
-        asciiLength += isascii(uc) ? 1 : 2;
-    }
-    return asciiLength;
-}
-```
-
----
-
-##### 21、检测字符串是否包含汉字
-```
-+ (BOOL)checkIsChinese:(NSString *)string{
-    for (int i=0; i(string.length; i++){
-        unichar ch = [string characterAtIndex:i];
-        if (0x4E00 (= ch  && ch (= 0x9FA5){
-            return YES;
-        }
-    }
-    return NO;
-}
-```
-
----
-
-##### 22、获取手机已安装的应用
+##### 17、获取手机已安装的应用
 ```
 Class c =NSClassFromString(@"LSApplicationWorkspace");
 id s = [(id)c performSelector:NSSelectorFromString(@"defaultWorkspace")];
@@ -293,7 +185,7 @@ for (id item in array){
 
 ---
 
-##### 23、判断两个日期是否在同一周 写在NSDate的category里面
+##### 18、判断两个日期是否在同一周 写在NSDate的category里面
 ```
 - (BOOL)isSameDateWithDate:(NSDate *)date{
     //日期间隔大于七天之间返回NO
@@ -314,7 +206,7 @@ for (id item in array){
 
 ---
 
-##### 24、数字格式化输出
+##### 19、数字格式化输出
 ```
 //通过NSNumberFormatter，同样可以设置NSNumber输出的格式。例如如下代码：
 NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -343,7 +235,7 @@ typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
 
 ---
 
-##### 25、navigationBar根据滑动距离的渐变色实现
+##### 20、navigationBar根据滑动距离的渐变色实现
 ```
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGFloat offsetToShow = 200.0;//滑动多少就完全显示
@@ -354,7 +246,7 @@ typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
 
 ---
 
-##### 26、NSString进行URL编码和解码
+##### 21、NSString进行URL编码和解码
 ```
 NSString *string = @"http://abc.com?aaa=你好&bbb=tttee";
 
@@ -367,7 +259,7 @@ string = [string stringByRemovingPercentEncoding];
 
 ---
 
-##### 27、获取UIColor的RGBA值
+##### 22、获取UIColor的RGBA值
 ```
 UIColor *color = [UIColor colorWithRed:0.2 green:0.3 blue:0.9 alpha:1.0];
 const CGFloat *components = CGColorGetComponents(color.CGColor);
@@ -379,7 +271,7 @@ NSLog(@"Alpha: %.1f", components[3]);
 
 ---
 
-##### 28、swift字面量初始化
+##### 23、swift字面量初始化
 
 swift定义了以下协议，这些协议可以使一种类型通过字面量的方式来初始化并赋值。
 
@@ -397,7 +289,7 @@ DictionaryLiteralConvertible
 
 ---
 
-##### 29、iOS系统自带悬浮调试框
+##### 24、iOS系统自带悬浮调试框
 
 在 AppDelegate 的 didFinishLaunchingWithOptions 方法中加入两行代码即可。
 
@@ -411,7 +303,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ---
 
-##### 30、监听系统时间的三个通知
+##### 25、监听系统时间的三个通知
 
 * **NSSystemTimeZoneDidChangeNotification：**监听修改时间界面的两个按钮状态变化
 * **UIApplicationSignificantTimeChangeNotification：** 监听用户改变时间 （只要点击自动设置按钮就会调用）,新的一天开始或者时区变化。 
@@ -419,13 +311,13 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ---
 
-##### 31、UITableView的headerView/footerView的高度问题
+##### 26、UITableView的headerView/footerView的高度问题
 
 开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下tableView.tableFooterView = 更改过高度的view。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
 
 ---
 
-##### 32、自定义聊天输入框弹出键盘修改frame
+##### 27、自定义聊天输入框弹出键盘修改frame
 
 注册通知监听键盘将要改变的高度（UIKeyboardWillChangeFrame）。
 
@@ -437,7 +329,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ---
 
-##### 33、找不到framework库
+##### 28、找不到framework库
 
 原因：Xcode的framework库文件换位置了。
 
@@ -450,20 +342,20 @@ ld: warning: directory not found for option '-F/Applications/Xcode.app/Contents/
 
 ---
 
-##### 34、找不到CAMetalLayer
+##### 29、找不到CAMetalLayer
 
 原因：需要连接真机。
 
 --- 
 
-##### 35、tableView报错：failed to obtain a cell from its dataSource
+##### 30、tableView报错：failed to obtain a cell from its dataSource
 
 * xib的cell没有注册。 
 * 内存中已经有这个cell的缓存了(也就是说通过你的cellId找到的cell并不是你想要的类型)，这时候需要改下cell的标识
 
 ---
 
-##### 36、Other Linker Flags的作用
+##### 31、Other Linker Flags的作用
 
 苹果官方Q&A的一段话：
 
