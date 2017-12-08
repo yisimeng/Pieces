@@ -301,6 +301,8 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 [具体使用教程](http://swift.gg/2017/05/27/ui-debugging-information-overlay/)
 
+> Note: 方法在iOS11之后非苹果内部设备不可使用。[iOS11上使用](http://www.cocoachina.com/ios/20171208/21467.html)
+
 ---
 
 ##### 25、监听系统时间的三个通知
