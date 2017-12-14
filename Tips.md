@@ -171,42 +171,12 @@ grep -r advertisingIdentifier .
 ---
 
 ##### 17、获取手机已安装的应用
-```
-Class c =NSClassFromString(@"LSApplicationWorkspace");
-id s = [(id)c performSelector:NSSelectorFromString(@"defaultWorkspace")];
-NSArray *array = [s performSelector:NSSelectorFromString(@"allInstalledApplications")];
-for (id item in array){
-    NSLog(@"%@",[item performSelector:NSSelectorFromString(@"applicationIdentifier")]);
-    //NSLog(@"%@",[item performSelector:NSSelectorFromString(@"bundleIdentifier")]);
-    NSLog(@"%@",[item performSelector:NSSelectorFromString(@"bundleVersion")]);
-    NSLog(@"%@",[item performSelector:NSSelectorFromString(@"shortVersionString")]);
-}
-```
+
+[LSApplicationWorkspace](https://github.com/nst/iOS-Runtime-Headers/blob/master/Frameworks/MobileCoreServices.framework/LSApplicationWorkspace.h)
 
 ---
 
-##### 18、判断两个日期是否在同一周 写在NSDate的category里面
-```
-- (BOOL)isSameDateWithDate:(NSDate *)date{
-    //日期间隔大于七天之间返回NO
-    if (fabs([self timeIntervalSinceDate:date]) >= 7 * 24 *3600){
-        return NO;
-    }
-
-    NSCalendar *calender = [NSCalendar currentCalendar];
-    calender.firstWeekday = 2;//设置每周第一天从周一开始
-    //计算两个日期分别为这年第几周
-    NSUInteger countSelf = [calender ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitYear forDate:self];
-    NSUInteger countDate = [calender ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitYear forDate:date];
-
-    //相等就在同一周，不相等就不在同一周
-    return countSelf == countDate;
-}
-```
-
----
-
-##### 19、数字格式化输出
+##### 18、数字格式化输出
 ```
 //通过NSNumberFormatter，同样可以设置NSNumber输出的格式。例如如下代码：
 NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -235,7 +205,7 @@ typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
 
 ---
 
-##### 20、navigationBar根据滑动距离的渐变色实现
+##### 19、navigationBar根据滑动距离的渐变色实现
 ```
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGFloat offsetToShow = 200.0;//滑动多少就完全显示
@@ -246,7 +216,7 @@ typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
 
 ---
 
-##### 21、NSString进行URL编码和解码
+##### 20、NSString进行URL编码和解码
 ```
 NSString *string = @"http://abc.com?aaa=你好&bbb=tttee";
 
@@ -259,19 +229,7 @@ string = [string stringByRemovingPercentEncoding];
 
 ---
 
-##### 22、获取UIColor的RGBA值
-```
-UIColor *color = [UIColor colorWithRed:0.2 green:0.3 blue:0.9 alpha:1.0];
-const CGFloat *components = CGColorGetComponents(color.CGColor);
-NSLog(@"Red: %.1f", components[0]);
-NSLog(@"Green: %.1f", components[1]);
-NSLog(@"Blue: %.1f", components[2]);
-NSLog(@"Alpha: %.1f", components[3]);
-```
-
----
-
-##### 23、swift字面量初始化
+##### 22、swift字面量初始化
 
 swift定义了以下协议，这些协议可以使一种类型通过字面量的方式来初始化并赋值。
 
@@ -289,7 +247,7 @@ DictionaryLiteralConvertible
 
 ---
 
-##### 24、iOS系统自带悬浮调试框
+##### 23、iOS系统自带悬浮调试框
 
 在 AppDelegate 的 didFinishLaunchingWithOptions 方法中加入两行代码即可。
 
@@ -315,7 +273,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ##### 26、UITableView的headerView/footerView的高度问题
 
-开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下tableView.tableFooterView = 更改过高度的view。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
+开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下```tableView.tableFooterView = 更改过高度的view```。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
 
 ---
 
