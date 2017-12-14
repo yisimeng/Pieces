@@ -263,7 +263,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ---
 
-##### 25、监听系统时间的三个通知
+##### 24、监听系统时间的三个通知
 
 * **NSSystemTimeZoneDidChangeNotification：**监听修改时间界面的两个按钮状态变化
 * **UIApplicationSignificantTimeChangeNotification：** 监听用户改变时间 （只要点击自动设置按钮就会调用）,新的一天开始或者时区变化。 
@@ -271,13 +271,13 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ---
 
-##### 26、UITableView的headerView/footerView的高度问题
+##### 25、UITableView的headerView/footerView的高度问题
 
 开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下```tableView.tableFooterView = 更改过高度的view```。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
 
 ---
 
-##### 27、自定义聊天输入框弹出键盘修改frame
+##### 26、自定义聊天输入框弹出键盘修改frame
 
 注册通知监听键盘将要改变的高度（UIKeyboardWillChangeFrame）。
 
@@ -289,7 +289,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 ---
 
-##### 28、找不到framework库
+##### 27、找不到framework库
 
 原因：Xcode的framework库文件换位置了。
 
@@ -302,20 +302,20 @@ ld: warning: directory not found for option '-F/Applications/Xcode.app/Contents/
 
 ---
 
-##### 29、找不到CAMetalLayer
+##### 28、找不到CAMetalLayer
 
 原因：需要连接真机。
 
 --- 
 
-##### 30、tableView报错：failed to obtain a cell from its dataSource
+##### 29、tableView报错：failed to obtain a cell from its dataSource
 
 * xib的cell没有注册。 
 * 内存中已经有这个cell的缓存了(也就是说通过你的cellId找到的cell并不是你想要的类型)，这时候需要改下cell的标识
 
 ---
 
-##### 31、Other Linker Flags的作用
+##### 30、Other Linker Flags的作用
 
 苹果官方Q&A的一段话：
 
@@ -330,3 +330,17 @@ Other Linker Flags 的三个参数：```-Objc```,```-all_load```,```-force_load`
 * ```-ObjC```: 链接器会将静态库中所有的Objective-C类和category都加载到可执行文件中，这样会因为加载了很多不必要的文件而导致可执行文件增大。
 * ```-all_load```（**慎用**）: 链接器会把所有找到的目标文件都加载到可执行文件中。如果项目中不止一个静态库文件，然后又使用的本参数。因为不同的库文件中有可能存在相同的文件，所以有可能会遇到```ld: duplicate symbol```错误，因此在```-ObjC```失效的情况下使用```-force_load```.
 * ```-force_load```: 与-all_load相同，只是在不同库存在相同文件的情况下，只是会加载一个文件，不影响其他文件的按需加载.
+
+---
+
+##### 31、提交代码到GitHub，图表不计算contributions
+
+代码库的user.email与GitHub账户没有关联。修改本地代码库的邮箱。可以在三个位置配置：
+
+* ```/etc/gitconfig```: 系统所有用户。
+* ```~/.gitconfig```: 当前用户，```git config --global user.email "邮箱地址"```。
+* ```repo/.git/config```: 当前仓库， ```git config user.email "邮箱地址"```。
+
+
+
+
