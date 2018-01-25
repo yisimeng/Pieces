@@ -341,6 +341,10 @@ Other Linker Flags 的三个参数：```-Objc```,```-all_load```,```-force_load`
 * ```~/.gitconfig```: 当前用户，```git config --global user.email "邮箱地址"```。
 * ```repo/.git/config```: 当前仓库， ```git config user.email "邮箱地址"```。
 
+---
 
+##### 32、 为UIWindow添加view
+
+做悬浮球需求的时候，应该先设置```[window makeKeyAndVisiable]```，使window可见，然后再添加悬浮球，否则悬浮球的层级会出现在rootVC.view的下面。
 
 
