@@ -347,4 +347,16 @@ Other Linker Flags 的三个参数：```-Objc```,```-all_load```,```-force_load`
 
 做悬浮球需求的时候，应该先设置```[window makeKeyAndVisiable]```，使window可见，然后再添加悬浮球，否则悬浮球的层级会出现在rootVC.view的下面。
 
+---
 
+##### 33、 .gitignore 未生效
+
+.gitignore只能忽略没有被跟踪的文件，如果文件已经被纳入版本管理，修改.gitignore是无效的。
+
+解决方案：需要先将本地缓存删除（将文件改为未跟踪状态），然后再提交。
+
+```
+git rm -r --cached .  // 删除全部缓存。 如果删除单个，将‘.’改为文件地址
+git add .
+git commit -m 'update .gitignore'
+```

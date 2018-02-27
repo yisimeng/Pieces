@@ -80,8 +80,9 @@ Xcode打包app生成ipa文件，通过iTunes或者蒲公英等第三方发布平
 >> 解压.ipa文件，得到app数据包，显示包内容，找到```embedded.mobileprovision```文件所在目录，运行命令```security cms -D -i embedded.mobileprovision```
 
 名词概念：
+
 1. 证书请求文件（CertificateSigningRequest.certSigningRequest）：本地公钥。
 2. 证书（Cer）：公钥及苹果签名后的信息。
-2. Entitlements：包含了 App 权限开关列表。
+3. Entitlements：包含了 App 权限开关列表。
 3. p12：本地私钥，可以导入到其他电脑。
 4. Provisioning Profile：包含了 证书 / Entitlements 等数据，并由苹果后台私钥签名的数据包。
