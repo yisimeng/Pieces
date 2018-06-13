@@ -36,3 +36,9 @@
 	**原因：**找不到framework库
 	**解决：**Framework search Paths 中替换为```$(PLATFORM_DIR)/Developer/Library/Frameworks```。
 	<img src="./images/解决方案.png" width = "801" height = "193" alt="图片名称">
+	
+3. ProductName was compiled with optimization - stepping may behave oddly; variables may not be available.
+
+	**描述：**调试时断点后打印信息。
+	**原因：**release模式下编译会做一些优化，导致单步程序异常，变量不可访问。
+	**解决：**编译方式改为debug。
