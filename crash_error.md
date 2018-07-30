@@ -34,11 +34,18 @@
 2. ```ld: warning: directory not found for option '-F/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator10.2.sdk/Developer/Library/Frameworks'```
 <img src="./images/找不到framework.png" width = "695" height = "37" alt="图片名称">
 	**原因：**找不到framework库
+	
 	**解决：**Framework search Paths 中替换为```$(PLATFORM_DIR)/Developer/Library/Frameworks```。
 	<img src="./images/解决方案.png" width = "801" height = "193" alt="图片名称">
 	
 3. ProductName was compiled with optimization - stepping may behave oddly; variables may not be available.
 
 	**描述：**调试时断点后打印信息。
+	
 	**原因：**release模式下编译会做一些优化，导致单步程序异常，变量不可访问。
 	**解决：**编译方式改为debug。
+4. [NSBundle initWithURL:]: nil URL argument
+
+	**描述：**运行时崩溃。
+	
+	**原因：**加载不到bundle文件，bundle没有被添加进ipa中，检查文件是否被添加进工程，并且`Target MemberShip`是否被选上。
