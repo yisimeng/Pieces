@@ -367,3 +367,19 @@ git commit -m 'update .gitignore'
 2. 缓存数据行高
 3. 复杂层级重复性大的视图采用CoreText和CoreGraphic绘制
 4. tableView快速滑动时，加载滚动结束处的内容
+
+##### 38、git拉取不同分支所做的某次修改  git cherry-pick
+
+场景：一个仓库中的多个分支，在其中一个分支中修改了部分通用的代码，其他分支也需要修改，直接merge会包含所有修改，如果只想合并当前某次的修改，该怎么做？
+
+* git rebase 变基，应该可以实现，但是可能需要所有分支先进行回退。（未测试，待验证）
+* git cherry-pick 挑选提交，指定提交某次的commit。
+
+**git cherry-pick用法：**
+
+单个commit：git cherry-pick commit_id
+多个commit：git cherry-pick commit_id1..commit_id10 或 git cherry-pick commit_id1^..commit_id10
+
+多个commit时，两个的差异在于`^`符号，前者为半开区间，即不包含commit1，包含commit10；后者未闭区间。
+
+多个时建议使用rebase（具体不清楚）。
