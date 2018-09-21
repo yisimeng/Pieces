@@ -92,6 +92,15 @@ project.targets[0].build_configurations.each do |config|
 end
 ```
 
+示例4：预编译宏配置
+
+```
+project.targets[0].build_configurations.each do |config|
+	config.build_settings["GCC_PREPROCESSOR_DEFINITIONS"] = "$(inherited)","ISTHIRDPAY=1"
+end
+
+```
+
 参考：
 
 [ruby库xcodeproj使用心得](https://blog.csdn.net/darya_1/article/details/78095821)
