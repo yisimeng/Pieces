@@ -47,6 +47,10 @@ du -sh *
 
 expr命令可以实现数值运算、数值或字符串比较、字符串匹配、字符串提取、字符串长度计算等功能。它还具有几个特殊功能，判断变量或参数是否为整数、是否为空、是否为0等。
 
+### shell 获取日期和时间
+
+current_dateTime="`date +%Y-%m-%d,%H:%m:%s`"
+echo $current_dateTime
 
 ## shell 参数格式
 
