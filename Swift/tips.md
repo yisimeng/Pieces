@@ -140,3 +140,8 @@ extension Dictionary {
 }
 
 ```
+
+
+## Hash
+
+苹果自带的Hash值生成算法，使用了随机数种子来加密Hash值，每个进程拥有一个随机数种子，在应用启动时生成。意味着，相同的内容在应用重启后或者不同的进程里计算的到的Hash值是不一样的。 如果业务对Hash值有比较强的依赖，需要保证每次生成的Hash值一样，可以在Xcode的环境变量里设置变量SWIFT_DETERMINISTIC_HASHING=1，来关闭使用随机数种子
