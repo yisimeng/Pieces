@@ -2,6 +2,17 @@
 
 ## UIView
 
+1. UIView 的初始化顺序
+
+自定义 UIView 时重写父类方法，常用到 `init、initWithCoder、initWithFrame`，还有由nib初始化之后的方法 `awakeFromNib`。
+
+| 初始化方法 | 调用顺序 |
+|:---:|:---:|
+| init | initWithFrame -> init |
+| initWithFrame | initWithFrame |
+| initWithCoder | initWithCoder -> awakeFromNib |
+
+
 ### UIViewAutoresizing
 
 简单的自动布局，不如autolayout（iOS 6）那么强大，对于一些简单的页面使用autolayout设置约束过于繁琐，可以使用autoresizing。
