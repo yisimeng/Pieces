@@ -383,3 +383,34 @@ git commit -m 'update .gitignore'
 多个commit时，两个的差异在于`^`符号，前者为半开区间，即不包含commit1，包含commit10；后者未闭区间。
 
 多个时建议使用rebase（具体不清楚）。
+
+##### 39、Xcode 10 New Build System pod package 打包 framework 报错
+
+Xcode 10 的默认编译系统变成了**New Build System**，之前为**Legacy Build System**。更新Xcode10之后有可能会编译报错。
+
+报错信息：
+
+```
+Multiple commands produce '/User/...../Info.plist'
+1) Target 'your target' has copy command from '/Users/.../One/Info.plist' to 'var/..../Info.plist'
+1) Target 'your target' has copy command from '/Users/.../Two/Info.plist' to 'var/..../Info.plist'
+```
+
+两个不同路径下的同名文件被拷贝到一起，所以报错。
+
+两种解决方案:
+
+1. File -> Project Settings / Workspace Settings 修改 Build System 为 Legacy Build System。
+2. project -> target -> Build Phases -> Copy Bundle Resources 删除冲突的Info.plist。
+
+> 由于**New Build System**是新的编译系统，还是尽量要接受，毕竟包含更先进的方法，是以后的趋势。
+
+Cocoapods-packager 打包插件使用的是默认编译系统，所以在Xcode 10环境下打包，也会报错，由于不会修改插件，所以也尽量采用第二种方式解决吧。
+
+##### 40、git log 与 git reflog
+
+git log：输出所有的 commit 记录。
+
+git reflog: 输出所有修改 HEAD 的记录。
+
+> 在一次 reset 到错误的 commit id 后，没记住最新的 commit id，差点重写后面所有的修改。
