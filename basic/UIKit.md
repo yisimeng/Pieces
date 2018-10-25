@@ -57,3 +57,6 @@ layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttribute
 ```
 方法去获取之后的cell的位置。
 
+
+## UIApplication
+
