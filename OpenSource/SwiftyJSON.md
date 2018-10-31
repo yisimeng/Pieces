@@ -2,7 +2,9 @@
 
 [GitHub](https://github.com/SwiftyJSON/SwiftyJSON)
 
-安全的从JSON字符串中通过字面量取值。
+保持JSON的语义，安全的从JSON字符串中通过字面量取值。
+
+HandyJSON 将JSON转化为Model，操作Model；SwiftyJSON则是保持JSON数据格式，更安全的解析JSON。
 
 swiftyJSON定义了结构体： JSON。
 
