@@ -414,3 +414,10 @@ git log：输出所有的 commit 记录。
 git reflog: 输出所有修改 HEAD 的记录。
 
 > 在一次 reset 到错误的 commit id 后，没记住最新的 commit id，差点重写后面所有的修改。
+
+##### 41、Xcode Playground 自动运行卡住，一直处于Running App 状态
+
+1. 在右侧的修改 platform 为 macOS
+2. 在下方长按运行按钮，修改为 Manually Run (手动运行)
+
+以上两种都不好使的话，使用万能方法：重启Xcode。
