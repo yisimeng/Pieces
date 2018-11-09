@@ -458,3 +458,7 @@ NSNotFound: 是 NSIntegerMax。当字符串为 nil 时，通过`rangeOfString:`�
         NSLog(@"str is nil");
     }
 ```
+
+##### 43、 mas 下载应用报错“无法使用此 Apple ID 重新下载”
+
+苹果下载应用分为两步，先“获取”，然后安装，报错原因是还未获取（未添加到已购项目中），所以无法下载安装，添加之后就可以下载了。
