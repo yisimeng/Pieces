@@ -421,3 +421,40 @@ git reflog: 输出所有修改 HEAD 的记录。
 2. 在下方长按运行按钮，修改为 Manually Run (手动运行)
 
 以上两种都不好使的话，使用万能方法：重启Xcode。
+
+##### 42、swift Array 里的 map/filter/reduce/flatten
+
+* map: 映射，将数组映射为另一个数组。
+* filter: 过滤，数组通过过滤条件后返回符合条件的数组。
+* reduce: 整合，遍历数组计算结果。
+* flatten: 展开，将数组展开为一个数组（在数组元素为数组时）
+* flatMap: 返回数组中不存在nil，会把Optional解包，高维数组降维
+
+##### 42、swift 泛型和Any类型
+
+Any 类型会避开 swift 的类型系统；泛型仍会由编译器进行类型检查。使用泛型的话可以在编译器的类型检查下安全的定义函数，推荐使用泛型。
+
+```
+func noOp<T>(_ x: T) -> T{
+    return x
+}
+func noOpAny(_ x: Any) -> Any {
+    return x
+}
+var result1 = noOp(1) + 2 // 3
+var result = noOpAny(1) + 2  // Binary operator '+' cannot be applied to operands of type 'Any' and 'Int'
+```
+
+上例中，noOp 的参数和返回值是一致的，而noOpAny的参数和返回值则可以是不同的。将noOpAny的返回值设为0，可以通过编译，而noOp的返回值修改为0，就会报错，因为入参不一定是Int类型。
+
+##### 42、NSString rangeOfString: NSNotFound
+
+NSNotFound: 是 NSIntegerMax。当字符串为 nil 时，通过`rangeOfString:`取得的NSRange 的location和length的值都为0。因此下面判断不严谨：
+```
+    NSString * str = nil;
+    if ([str rangeOfString:@"aa"].location != NSNotFound) {
+        NSLog(@"%@",str);
+    }else {
+        NSLog(@"str is nil");
+    }
+```
