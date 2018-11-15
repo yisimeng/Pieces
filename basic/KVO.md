@@ -1,4 +1,8 @@
 # KVO
+
+NSKeyValueObservingOptions
+NSKeyValueChangeKey
+
 ** KVO实现原理：**
 监听set方法
 1、runtime动态生成对象的子类（派生类）（KVO_Person）
