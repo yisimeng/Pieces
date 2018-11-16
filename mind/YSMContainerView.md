@@ -69,7 +69,7 @@ flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 flowLayout.itemSize = self.bounds.size;
 flowLayout.minimumLineSpacing = 0;
 flowLayout.minimumInteritemSpacing = 0;
-	```
+```
 
 * 纵向直接滚动子视图控制器的UIScorllView（或者其子类）。
 
