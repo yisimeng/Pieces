@@ -380,9 +380,17 @@ git commit -m 'update .gitignore'
 单个commit：git cherry-pick commit_id
 多个commit：git cherry-pick commit_id1..commit_id10 或 git cherry-pick commit_id1^..commit_id10
 
-多个commit时，两个的差异在于`^`符号，前者为半开区间，即不包含commit1，包含commit10；后者未闭区间。
+多个commit时，两个的差异在于`^`符号，表示为半开区间，即不包含commit1，包含commit10。
 
 多个时建议使用rebase（具体不清楚）。
+
+拉取多个commit时，中间有可能会有冲突，遇到冲突会停止，即后面的不会继续同步。解决冲突并add之后可以选择是否继续同步：
+
+```
+--quit                end revert or cherry-pick sequence 停止
+--continue            resume revert or cherry-pick sequence 继续
+--abort               cancel revert or cherry-pick sequence 取消
+```
 
 ##### 39、Xcode 10 New Build System pod package 打包 framework 报错
 
