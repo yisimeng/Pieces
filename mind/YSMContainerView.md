@@ -1,5 +1,7 @@
 ## YSMContainerView
 
+一个易于接入的，思路简洁的仿微博简书等个人页的轮子。
+
 [Demo地址](https://github.com/yisimeng/YSMContainerView)
 
 起因：以前去新浪面试被问到了微博个人页的实现，应该是考查手势冲突的问题，当时回答的怎么样已经忘了。回来之后自己实现了一个，但是扩展性始终不太好，最近仿照UITableView的方式重新实现了一个版本。
@@ -48,15 +50,34 @@
 
 #### 使用
 
-1. 创建子视图控制器，子视图控制器需要遵循YSMContainrerChildControllerDelegate代理。
-
-2. 初始化之后，向YSMContainerView的viewControllers传入子视图控制器数组
-
+1. 创建child controller并实现YSMContainrerChildControllerDelegate代理方法。
+	
 	```
-	self.viewControllers = @[child1,child2,child3];
+	- (UIScrollView *)childScrollView{
+ 	   return self.tableView;
+	}
 	```
 	
-3. 实现YSMContainerViewDataSource的方法。
+2. YSMContainerView初始化。
+
+	```
+	self.containerView = [[YSMContainerView alloc] initWithFrame:self.view.bounds];
+    self.containerView.dataSource = self;
+    [self.view addSubview:self.containerView];
+	```
+3. 实现YSMContainerViewDataSource代理的方法。
+
+	```
+	- (NSInteger)numberOfViewControllersInContainerView:(YSMContainerView *)containerView {
+		return self.viewControllers.count;
+}
+- (UIViewController<YSMContainrerChildControllerDelegate> *)containerView:(YSMContainerView *)containerView viewControllerAtIndex:(NSInteger)index {
+    	UIViewController<YSMContainrerChildControllerDelegate> * childController = self.viewControllers[index];
+    	return childController;
+}
+	```
+
+> 注意：第一步中，因为使用的是懒加载，YSMContainrerChildControllerDelegate代理方法不能返回空，如果在`viewDidLoad`方法中或之后初始化，会在添加sub view 时获取不到ScollView，而出现空页面。
 
 ### 实现思路
 
@@ -73,15 +94,53 @@
 
 * 纵向直接滚动子视图控制器的UIScorllView（或者其子类）。
 
-主要实现难点在于横向滚动和纵向滚动容易冲突，整理主要思路：
+主要实现难点在于处理横向和纵向滚动，于是整理主要思路：
 
-1. HeaderView 添加到 UICollectionView 上，根据header的高度，依次设置子视图控制器ScrollView的 contentInset属性，使其内容向下偏移header的高度。
-2. 设置UICollectionView的delegate方法，在横向滚动时，获取偏移量，设置 headerView 同步横向偏移，实现headerView 始终保持在子视图的上方。
-3. 在添加子视图时，添加观察者，监听子视图ScrollView的`contentOffset`属性。
-4. 纵向滚动时，会出发KVO监听方法，在回调中可以拿到当前子视图控制器的偏移量，然后设置header同步纵向偏移，实现滚动headerView的效果。
+1. header view 是添加到 UICollectionView 上，而不是child controller的header。
+2. 根据header的高度，依次设置子视图控制器ScrollView的 contentInset 属性，使其内容向下偏移header的高度，呈现header是在child controller 上的效果。
+	
+	```
+	UIEdgeInsets contentInset = UIEdgeInsetsMake(_headerViewHeight, 0, 0, 0);
+	childScrollView.contentInset = contentInset;
+	childScrollView.scrollIndicatorInsets = contentInset;
+	```
+	
+3. 设置UICollectionView的delegate方法，在横向滚动时，获取偏移量，设置 headerView 同步横向偏移，实现headerView 始终保持在子视图的上方。
 
+	```
+	- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    	// 水平移动时 控制header水平同步位移
+	    CGRect headerFrame = self.containerHeaderView.frame;
+	    headerFrame.origin.x = scrollView.contentOffset.x;
+    	self.containerHeaderView.frame = headerFrame;
+}
+	```
+	
+4. 在添加child controller时，添加观察者，监听子视图ScrollView的`contentOffset`属性。
+	
+	```
+	[childScrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
+	```
+
+5. 纵向滚动时，会出发KVO监听方法，在回调中可以拿到当前子视图控制器的偏移量，然后设置header同步纵向偏移，实现滚动headerView的效果。
+
+	```
+	- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
+	    if (![keyPath isEqualToString:@"contentOffset"]) {
+        	return [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    	}
+    	CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
+		// 根据contentOffset的位置同步偏移 header view，设置悬停位置。
+	}
+	```
+
+### TODO
+
+1. 进一步封装，子视图添加 tab，点击切换子视图，tab随子视图滚动切换。
+2. 指定移除子视图控制器。
+3. 完善YSMContainerViewDelegate方法。
 
 ## 参考
 
-[HJTabViewController](https://github.com/panghaijiao/HJTabViewController)
+[HJTabViewController](https://github.com/panghaijiao/HJTabViewController) 
 
