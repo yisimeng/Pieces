@@ -2,7 +2,7 @@
 
 先说下CocoaPods拉取开源库的原理：
 
-我们知道 CocoaPods 有一个开源的索引仓库[Specs](https://github.com/CocoaPods/Specs)，仓库存放着所有开源库的各个版本的`.podspec`文件，`.podspec`文件包含中记录着源码的地址。我们首次使用CocoaPods时，会将这个文件库克隆到本地`~/.cocoapods/repos/master`。
+CocoaPods 有一个开源的索引仓库[Specs](https://github.com/CocoaPods/Specs)，仓库存放着所有开源库的各个版本的`.podspec`文件，`.podspec`文件包含中记录着源码的地址。首次使用CocoaPods时，会将这个文件库克隆到本地`~/.cocoapods/repos/master`。
 
 1. 在Podfile目录下执行 `pod install` 命令，会从本地的索引库查找该库的`.podsepc`，如果本地不存在会从远程拉取最新的索引库。
 2. 根据索引库中查到的`.podspec`文件内容，获取源码地址。
@@ -24,14 +24,53 @@
 
 1. 在私有git上创建一个索引仓库，例：YSMSpecs，用于存放索引文件。
 2. 将远程索引库添加到本地，`pod repo add YSMSpecs YSMSpecs_source_url`。使用`pod repo`可以查看本地的索引仓库列表。
+    
+    ```
+    $ pod repo add YSMSpecs https://github.com/yisimeng/YSMSpecs.git
+    $ pod repo
+    
+    master   // 公有索引仓库
+    - Type: git (master)
+    - URL:  https://github.com/CocoaPods/Specs.git
+    - Path: /Users/duanzengguang/.cocoapods/repos/master
+    YSMSpecs  //私有索引仓库
+    - Type: git (master)
+    - URL:  https://github.com/yisimeng/YSMSpecs.git
+    - Path: /Users/duanzengguang/.cocoapods/repos/YSMSpecs
+    ```
+
 3. 本地创建我们的源码工程，可以使用`pod lib create YSMKit`，创建一个模板工程。
-4. 在模板工程里进行开发并替换 ReplaceMe 文件，修改`.podspec`文件，推送到远程源码仓库，打tag，提交。源码仓库部署完成。
+4. 在模板工程里进行开发并替换 ReplaceMe 文件，修改`.podspec`文件(版本号，源码地址)，推送到远程源码仓库，打tag，提交。源码仓库部署完成。
 5. CocoaPods不允许有Podspecs lints错误，所以需要进行Podspecs lints（翻译不好，会检查语法错误）验证。这里可以使用`pod lib lint`或者`pod spec lint`,区别在于前者不会联网，而后者还会检查外部的仓库和相关的标签。
+
+    ```
+    $ pod lib lint
+    -> YSMKit (0.1.0)
+    YSMKit passed validation.
+    ```
+    
 6. 检查没有错误之后，推送`.podspec`文件到本地的索引仓库，本地索引仓库会自动push到远程索引仓库。`pod repo push YSMSpecs YSMKit.podspec`，这一步会自动进行`pod spec lint`联网检查。索引库部分完成。
 
-> 第6步如果使用`pod trunk push`，会将索引库推送到官方的Specs仓库中。
-
+    ```
+    $ pod repo push YSMSpecs YSMKit.podspec
+    Validating spec
+     -> YSMKit (0.1.0)
+    Updating the `YSMSpecs' repo
+    Already up to date.
+    Adding the spec to the `YSMSpecs' repo
+     - [Add] YSMKit (0.1.0)
+    Pushing the `YSMSpecs' repo   // 会自动推送到远程仓库
+    
+    $ pod search YSMKit
+    -> YSMKit (0.1.0)
+       YSMKit is my kit
+       pod 'YSMKit', '~> 0.1.0'
+       - Versions: 0.1.0 [YSMSpecs repo]
+    ```
+    
 到这里私有仓库是搞完了。
+    
+> 第6步如果使用`pod trunk push YSMKit.podspec`，会将索引库推送到官方的Specs仓库中。
 
 ### 私有库的使用
 
@@ -39,7 +78,7 @@
 2. 在文件的最上方添加索引库地址
 
 ```
-source 'https://.../YSMSpecs/git'
+source 'https://github.com/yisimeng/YSMSpecs.git'
 source 'https://github.com/CocoaPods/Specs.git'
 ```
 然后执行 pod install，就可以使用了。
@@ -69,3 +108,5 @@ post_install do |installer|
     end
 end
 ```
+
+`pre_install`：编译之前可以添加修改（还没想到可以做哪些事情）。
