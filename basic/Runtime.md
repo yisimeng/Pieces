@@ -56,6 +56,7 @@ struct category_t {
 **方法缓存限制**
 
 这个问题翻了下runtime的源码：[runtime-cache](https://github.com/opensource-apple/objc4/blob/master/runtime/objc-cache.mm)
+
 ```
 static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver){
   //  省略
@@ -96,11 +97,13 @@ typedef uint16_t mask_t;
 
 ```
 由源码可以看出：
+
 1. 当缓存已满时，调用expand()方法进行扩容。
 2. 计算新的缓存个数，INIT_CACHE_SIZE由下面代码可以看出是一个枚举值为4。
 3. 计算完新的缓存大小，进行了两次强转之后判断是否与原值相等。-强转为mask-t类型，在64位下uint32_t类型。-强转为uint32_t类型。**结论：缓存的最大限制为2^mask_t**
 
 **类的方法为什么存成一个数组，而不是散列表**
+
 * 散列表是无序的，OC方法列表是有序的，OC查找方法是会顺着list依次寻找，并且category方法的优先级高于本身，所以要保证category方法在前面。如果用hash，则顺序无法保证。（同时解释了为什么category的方法优先级高）
 * 散列表是有空槽的，会浪费空间。
 * list的方法还保存了除了selector和imp之外其他属性。（**下面代码**）
@@ -128,7 +131,7 @@ typedef struct {
 方法列表的顺序部分和load的顺序有关，先是方法，然后是getter、setter方法。如果方法重名，category方法在前。
 
 
-## SEL与IMP，Method等
+## SEL与IMP，Method，Ivar，property。
 
 **SEL：**是用字符串表示的某个对象的方法（虚拟表中指向某个函数指针的字符串）
 
@@ -193,5 +196,12 @@ class ObjcAssociation {
 系统管理着一个关联管理者AssociationsManager，AssociationsManager内部有个AssociationsHashMap属性，这是一个hashmap，以对象指针为key，以“这个对象所有的关联引用map”对象为value，“这个对象所有的关联引用map”是以设置的key为关联键，以ObjcAssociation为值，ObjcAssociation包涵关联值和策略。
 
 > **问题思考：用runtime 关联一个属性，这个属性什么时候释放?**
->当直接调用objc_removeAssociatedObjects方法时。
->当销毁对象的时候，会调用objc_destructInstance方法，最终还是会调用移除关联对象的方法。
+> 
+> * 当直接调用objc_removeAssociatedObjects方法时。
+> * 当销毁对象的时候，会调用objc_destructInstance方法，最终还是会调用移除关联对象的方法。
+
+
+
+#### _objc_builtin_selectors 系统内嵌的sel
+
+runtime源码 [objc-sel.m/_objc_builtin_selectors] 定义了系统的sel
