@@ -195,7 +195,7 @@ class ObjcAssociation {
 
 系统管理着一个关联管理者AssociationsManager，AssociationsManager内部有个AssociationsHashMap属性，这是一个hashmap，以对象指针为key，以“这个对象所有的关联引用map”对象为value，“这个对象所有的关联引用map”是以设置的key为关联键，以ObjcAssociation为值，ObjcAssociation包涵关联值和策略。
 
-> **问题思考：用runtime 关联一个属性，这个属性什么时候释放?**
+> **问题：用runtime 关联一个属性，这个属性什么时候释放?**
 > 
 > * 当直接调用objc_removeAssociatedObjects方法时。
 > * 当销毁对象的时候，会调用objc_destructInstance方法，最终还是会调用移除关联对象的方法。
