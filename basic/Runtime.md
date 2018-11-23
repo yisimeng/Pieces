@@ -199,9 +199,3 @@ class ObjcAssociation {
 > 
 > * 当直接调用objc_removeAssociatedObjects方法时。
 > * 当销毁对象的时候，会调用objc_destructInstance方法，最终还是会调用移除关联对象的方法。
-
-
-
-#### _objc_builtin_selectors 系统内嵌的sel
-
-runtime源码 [objc-sel.m/_objc_builtin_selectors] 定义了系统的sel
