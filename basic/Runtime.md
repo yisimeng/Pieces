@@ -45,7 +45,8 @@ struct category_t {
 * 由上图可知：实例变量的isa指向的是类，而类的isa指向的是元类（metaClass）。
 * 由代码可知：isMeta为YES，返回的是classMethods，反之返回instanceMethods。
 
-由此分析：**实例方法存放在类中，由类结构体可以看出。而类方法存放在元类（metaClass）里。
+> 1. **实例方法存放在类中**：```class_copyMethodList(cls, &count)```
+> 2. **类方法存放在元类（metaClass）**：```class_copyMethodList(object_getClass(cls), &count)```
 
 ## 方法缓存 struct objc_cache *cache
 
