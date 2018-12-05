@@ -25,13 +25,7 @@
 
 命令：`pod package XXX.podspec`
 
-##### 注意事项
-1. 插件打包，如果包含第三方framework，需要将其中的替身文件删除，否则会因识别不了替身文件导致打包出错。
-![](./images/framework_error.tiff)
-
-2. Pod package 编译时 需要将本地代码commit和清空`~/Library/Caches/CocoaPods/Pods/External/FrameworkName` 否则会导致新添加内容不会打进SDK中。
-
-#### 3. `.a`、`.framework`和`.embeddedframework`的区别
+### 3. `.a`、`.framework`和`.embeddedframework`的区别
 
 - .a：只有代码，不包含图片等资源文件，需要配合`.h`。
 - .framework：除了包含代码文件，还有图片等资源文件，资源文件在`.framework`目录下。
@@ -40,3 +34,16 @@
 `.framework`如果包含资源的bundle，而且没有把bundle添加到工程中的话，会因找不到bundle而崩溃。
 > `.framework`内部的二进制文件和资源文件会一起被打进可执行文件中；
 > `.embeddedframework`中的二进制文件会被打进可执行文件中，资源文件作为bundle存放在app的bundle内。
+
+### 4 Build Phases
+
+- Target Dependencies: 项目依赖。
+- Compile Sources: 项目源文件.m，会打进二进制文件中。
+- Link Binary With Libraries: 链接的库文件和二进制文件，会打进二进制文件中。(Cocoapods-packager 是根据podspec文件进行打包)。
+- Copy Bundle Resources: 项目的资源文件。
+
+##### 注意事项
+1. 插件打包，如果包含第三方framework，需要将其中的替身文件删除，否则会因识别不了替身文件导致打包出错。
+![](./images/framework_error.tiff)
+
+2. Pod package 编译时 需要将本地代码commit和清空`~/Library/Caches/CocoaPods/Pods/External/FrameworkName` 否则会导致新添加内容不会打进SDK中。
