@@ -4,9 +4,10 @@
 
 ```
 typedef struct objc_class *Class;
-
+// OBJC2 以前
 struct objc_class {
     Class isa;
+#if !__OBJC2__
     Class super_class;
     const char *name;
     long version;
@@ -16,7 +17,74 @@ struct objc_class {
     struct objc_method_list **methodLists;
     struct objc_cache *cache;
     struct objc_protocol_list *protocols;
-};
+#endif
+}OBJC2_UNAVAILABLE;
+
+// 之后
+struct objc_class : objc_object {
+    // Class ISA;
+    Class superclass;
+    cache_t cache;
+    class_data_bits_t bits;
+    class_rw_t *data();
+    void setData(class_rw_t *newData);
+    void setInfo(uint32_t set);
+    void clearInfo(uint32_t clear);
+    // set and clear must not overlap
+    void changeInfo(uint32_t set, uint32_t clear);
+    bool hasCustomRR();
+    void setHasDefaultRR();
+    void setHasCustomRR(bool inherited = false);
+    void printCustomRR(bool inherited);
+    bool hasCustomAWZ();
+    void setHasDefaultAWZ();
+    void setHasCustomAWZ(bool inherited = false);
+    void printCustomAWZ(bool inherited);
+    bool requiresRawIsa();
+    void setRequiresRawIsa(bool inherited = false);
+    void printRequiresRawIsa(bool inherited);
+    bool canAllocIndexed();
+    bool canAllocFast();
+    bool hasCxxCtor();
+    void setHasCxxCtor();
+    bool hasCxxDtor();
+    void setHasCxxDtor();
+    bool isSwift()
+#if SUPPORT_NONPOINTER_ISA
+    // Tracked in non-pointer isas; not tracked otherwise
+#else
+    bool instancesHaveAssociatedObjects();
+    void setInstancesHaveAssociatedObjects();
+#endif
+    bool shouldGrowCache();
+    void setShouldGrowCache(bool);
+    bool shouldFinalizeOnMainThread();
+    void setShouldFinalizeOnMainThread()
+    bool isInitializing();
+    void setInitializing();
+    bool isInitialized();
+    void setInitialized();
+    bool isLoadable();
+    IMP getLoadMethod();
+    // Locking: To prevent concurrent realization, hold runtimeLock.
+    bool isRealized();
+    // Returns true if this is an unrealized future class.
+    // Locking: To prevent concurrent realization, hold runtimeLock.
+    bool isFuture();
+    bool isMetaClass();
+    // NOT identical to this->ISA when this is a metaclass
+    Class getMeta()
+    bool isRootClass()
+    bool isRootMetaclass()
+    const char *mangledName()；
+    const char *demangledName(bool realize = false);
+    const char *nameForLogging();
+    // May be unaligned depending on class's ivars.
+    uint32_t unalignedInstanceSize();
+    // Class's ivar size rounded up to a pointer-size boundary.
+    uint32_t alignedInstanceSize();
+    size_t instanceSize(size_t extraBytes);
+    void setInstanceSize(uint32_t newSize)
 ```
 
 ## 关于isa的理解
@@ -45,8 +113,7 @@ struct category_t {
 * 由上图可知：实例变量的isa指向的是类，而类的isa指向的是元类（metaClass）。
 * 由代码可知：isMeta为YES，返回的是classMethods，反之返回instanceMethods。
 
-> 1. **实例方法存放在类中**：```class_copyMethodList(cls, &count)```
-> 2. **类方法存放在元类（metaClass）**：```class_copyMethodList(object_getClass(cls), &count)```
+由此分析：**实例方法存放在类中，由类结构体可以看出。而类方法存放在元类（metaClass）里。
 
 ## 方法缓存 struct objc_cache *cache
 
@@ -99,11 +166,17 @@ typedef uint16_t mask_t;
 ```
 由源码可以看出：
 
-1. 当缓存已满时，调用expand()方法进行扩容。
+1. 当缓存大于3/4时，调用expand()方法进行扩容。
 2. 计算新的缓存个数，INIT_CACHE_SIZE由下面代码可以看出是一个枚举值为4。
-3. 计算完新的缓存大小，进行了两次强转之后判断是否与原值相等。-强转为mask-t类型，在64位下uint32_t类型。-强转为uint32_t类型。**结论：缓存的最大限制为2^mask_t**
+3. 计算完新的缓存大小，进行了两次强转之后判断是否与原值相等。
+  - 强转为mask-t类型，在64位下uint32_t类型。
+  - 强转为uint32_t类型。
 
-**类的方法为什么存成一个数组，而不是散列表**
+**结论：缓存的最大限制为2^mask_t**
+
+> 注意：这里是OBJC2以前的实现。
+
+**类的方法为什么存成一个数组，而不是散列表?**
 
 * 散列表是无序的，OC方法列表是有序的，OC查找方法是会顺着list依次寻找，并且category方法的优先级高于本身，所以要保证category方法在前面。如果用hash，则顺序无法保证。（同时解释了为什么category的方法优先级高）
 * 散列表是有空槽的，会浪费空间。
@@ -111,9 +184,9 @@ typedef uint16_t mask_t;
 
 ```
 struct objc_cache {
-    uintptr_t mask;            /* total = mask + 1 */
-    uintptr_t occupied;
-    cache_entry *buckets[1];
+    uintptr_t mask  OBJC2_UNAVAILABLE;            /* total = mask + 1 */
+    uintptr_t occupied  OBJC2_UNAVAILABLE;
+    cache_entry *buckets[1]  OBJC2_UNAVAILABLE;
 };
 typedef struct {
     SEL name;     // same layout as struct old_method
