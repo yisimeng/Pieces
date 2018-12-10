@@ -2,14 +2,16 @@
 
 GCD 是异步执行任务的技术之一，提供系统级线程管理，具有高执行效率。开发者只需要将要执行的任务添加到适当的 Dispatch Queue 中，由系统自动调度执行。iOS6以后被纳入到 ARC 的范围内，不需要手动管理了。
 
-> 苹果的系统级别是iOS和OSX的核心XNU内核级上实现。
+> 通常应用程序中的线程管理要在系统层级实现，GCD是在iOS和OSX的核心XNU内核级上实现。
 
 ### Dispatch Queue
 
-执行任务的等待队列，按照 FIFO （First-In-First-out）执行任务。队列分为两种：
+Dispatch Queue 通过**结构体和链表**实现为FIFO（First-In-First-out）队列。
+
+执行任务的等待队列，按照FIFO执行任务。队列分为两种：
 
 * Serial Dispatch Queue：串行队列，等待执行结果，使用一个线程处理。
-* Concurrent Dispatch Queue：并行队列，不等待结果，使用多个线程（由系统决定数量）。
+* Concurrent Dispatch Queue：并行队列，不等待结果，使用多个线程（由GCD控制具体执行的线程和并发数）。
 
 Dispatch Queue 不等同于**线程**，可以管理多个线程。多个串行队列将会并行执行，系统对于一个串行队列只生成并使用一个线程。
 
@@ -157,27 +159,22 @@ dispatch_async(queue, ^{/*读取 16383 ~ 24575 字节*/});
 dispatch_async(queue, ^{/*读取 24576 ~ end 字节*/});
 ```
 
+#### Dispatch Source
 
-1. 编程人员所使用的GCD的API全部为包含在libdispatch库中的C语言函数.
-2. Dispatch Queue 通过结构体和链表,被实现成FIFO队列.FIFO队列管理是通过dispatch_async等函数所追加的Block.
-3. Block 并不是直接加入FIFO队列,而是先加入Disptch_Continuation_t 类型结构体中,然后加入FIFO队列.  该Dispatch Continuation 用于记忆Block所属的Dispatch Group和其他一些信息,相当于一般常说的执行上下文.
-4. Dispatch Queue 通过dispatch_set_target_queue 函数进行设定,同时也会优先级的信息.phthread_workqueue_create_np    XNU内核持有 workqueue
-5. Dispacth 执行Block的过程. 当在Global Dispatch Queue中执行Block时,Libdispatch 从Global Dispatch Queue自身的FIFO队列中取出Dispatch Continuation,调用pthread_workqueue_additem_np函数.  将Global Dispatch Queue自身信息,符合优先级的work却也信息以及为执行Dispatch Contitnuation的回调函数等传递给参数.
-pthread_workqueue_additem_np函数使用workq_kernreturn系统调用,通过workqueue增加应当执行项目,根据该通知,XNU系统会判断是否生产线程.
-6. workqueue 的线程执行pthread_workqueue函数,该函数调用libdispatch的回调函数.在回调函数中执行加入到DispatchContinuation的Block.
-7. block 执行完了后,进行通知Dispatch Group结束,释放Dispatch Continuation等处理,开始准备执行下一个Block.
+是对 BSD 系统内核 kqueue 的封装，处理发生在 XNU 内核中发生的事件的技术，CPU负荷非常小。事件发生时，在指定的 Dispatch Queue 中执行事件的处理。
 
+| Dispatch Source 种类 | 备注 |
+|:-|-:|
+| DISPATCH_SOURCE_TYPE_DATA_ADD | 变量增加 |
+| DISPATCH_SOURCE_TYPE_DATA_OR | 变量或 |
+| DISPATCH_SOURCE_TYPE_MACH_SEND | mach 端口发送 |
+| DISPATCH_SOURCE_TYPE_MACH_RECV | mach 端口接受 |
+| DISPATCH_SOURCE_TYPE_PROC | 监测与进程相关事件 |
+| DISPATCH_SOURCE_TYPE_SIGNAL | 信号 |
+| DISPATCH_SOURCE_TYPE_TIMER | 定时器 |
+| DISPATCH_SOURCE_TYPE_VNODE | 文件系统变更 |
+| DISPATCH_SOURCE_TYPE_WRITE | 写入文件映像 |
+| DISPATCH_SOURCE_TYPE_READ | 读取文件映像 |
 
-
-
-## Dispatch Queue
-
-Dispatch Queue 是一个类似队列的数据结构，而且是 FIFO队列，因此任务开始执行的顺序，就是你把它们放到 queue 中的顺序。GCD 中的队列有下面三种：
-
-* Serial（串行队列）按照添加进队列的顺序一个一个执行。
-* Concurrent(并行队列)也叫 global dispatch queue，可以并发执行多个任务，但是顺序，仍然是按照添加的顺序执行。由GCD控制具体执行的线程和并发数。
-* Main Dispatch Queue(主队列)是一个全局可见的**串行**队列。主队列通过与应用程序的 runloop 交互，把任务安插到 runloop 当中执行。
-
-dispatch queue 不是线程，可以管理多个线程。
-
+Dispatch Source 中是可以取消的，例如 timer，而且可以自定义取消后的回调处理。
 
