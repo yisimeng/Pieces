@@ -34,8 +34,8 @@ RunLoop 的运行必须指定一个 Mode，即currentMode。切换时必须先�
 
 **CFRunLoopSourceRef** 事件源，source0和source1
 
-* source0 只包含一个回调，不能主动触发。 负责App内部事件，由App负责管理触发，例如触摸事件。
-* source1 包好一个mach_port和一个回调，可以监听系统端口和其他线程互发消息，能主动唤醒RunLoop。
+* source0 只包含一个回调，不能主动触发。 负责App内部事件，由App负责管理触发，例如触摸事件。有公开api可调用。
+* source1 包好一个mach_port和一个回调，可以监听系统端口和其他线程互发消息，能主动唤醒RunLoop。只能系统调用。
 
 **CFRunLoopTimerRef** 时间源，包含一个时间点和一个回调，加入RunLoop后，会注册时间点，当到达时间点事，会唤醒RunLoop执行回调。
 

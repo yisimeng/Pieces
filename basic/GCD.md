@@ -164,7 +164,7 @@ dispatch_async(queue, ^{/*读取 24576 ~ end 字节*/});
 是对 BSD 系统内核 kqueue 的封装，处理发生在 XNU 内核中发生的事件的技术，CPU负荷非常小。事件发生时，在指定的 Dispatch Queue 中执行事件的处理。
 
 | Dispatch Source 种类 | 备注 |
-|:-|-:|
+|:-|:-|
 | DISPATCH_SOURCE_TYPE_DATA_ADD | 变量增加 |
 | DISPATCH_SOURCE_TYPE_DATA_OR | 变量或 |
 | DISPATCH_SOURCE_TYPE_MACH_SEND | mach 端口发送 |
