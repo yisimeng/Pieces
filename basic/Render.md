@@ -38,3 +38,6 @@ CPU将要显示的内容计算好提交到GPU进行渲染，渲染结果存放�
 iOS9之前UIImageView和UIButton设置圆角都会触发离屏渲染。
 
 iOS9之后UIButton设置圆角会触发离屏渲染，而UIImageView中png图片设置圆角不会触发，如果设置其他阴影效果等还是会触发。
+
+
+
