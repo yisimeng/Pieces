@@ -93,3 +93,7 @@ ARGS=`getopt -o ab:c:: --long along,blong:,clong:: -n 'example.sh' -- "$@"`
 8. ${file%%.*}：拿掉第一个.及其右边的字串：/dir1/dir2/dir3/my
 
 其中的“.”和“/”可以替换成其他字符串，用于字符串截取。
+
+## 笔记
+
+1. $- 相当于当前shell的运行参数，根据参数里是否有 i 来判断是否交互模式。
