@@ -14,3 +14,9 @@
 
 http://www.cocoachina.com/ios/20170427/19136.html
 https://www.jianshu.com/p/56e17c8e3a94?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+
+### 3. target 版本过低
+
+```Specs satisfying the `Example (from `../`)` dependency were found, but they required a higher minimum deployment target.```
+
+修改 Podfile 中 platform 的版本。
