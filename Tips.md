@@ -122,7 +122,7 @@ GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器�
 ##### 12、+load()与+initialize()方法
 **调用时机**
 
-* +load()方法：官方文档介绍:Invoked whenever a class or category is added to the Objective-C runtime;，意思是说当类被加载到runtime的时候就会运行，也就是说是在main.m之前~会根据Compile Sources中的顺序来加载，但还有一个需注意的加载顺序。
+* +load()方法：官方文档介绍:Invoked whenever a class or category is added to the Objective-C runtime;，意思是说当类被加载到runtime的时候就会运行，也就是说是在**main.m之前**,会根据Compile Sources中的顺序来加载，但还有一个需注意的加载顺序。
 * +initialize()方法：官方文档上介绍:Initializes the class before it receives its first message.意思是在类接收第一条消息之前初始化类。值得注意的点是：类初始化的时候每个类只会调用一次+initialize()，如果子类没有实现+initialize()，那么将会调用父类的+initialize()，也就是意味着父类的+initialize()可能会被多次调用。
 
 **使用场景：**
@@ -474,3 +474,9 @@ NSNotFound: 是 NSIntegerMax。当字符串为 nil 时，通过`rangeOfString:`�
 ##### 44、 git 修改 commit 的信息
 
 修改最后一次 commit 信息： git commit --amend
+
+##### 45、 什么是User-Agent
+
+User-Agent是Http协议中的一部分，属于头域的组成部分，User Agent也简称UA。用较为普通的一点来说，是一种向访问网站提供你所使用的浏览器类型、操作系统及版本、CPU 类型、浏览器渲染引擎、浏览器语言、浏览器插件等信息的标识。UA字符串在每次浏览器 HTTP 请求时发送到服务器！
+
+浏览器UA 字串的标准格式为： 浏览器标识 (操作系统标识; 加密等级标识; 浏览器语言) 渲染引擎标识 版本信息
