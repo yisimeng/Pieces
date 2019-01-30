@@ -368,30 +368,6 @@ git commit -m 'update .gitignore'
 3. 复杂层级重复性大的视图采用CoreText和CoreGraphic绘制
 4. tableView快速滑动时，加载滚动结束处的内容
 
-##### 38、git拉取不同分支所做的某次修改  git cherry-pick
-
-场景：一个仓库中的多个分支，在其中一个分支中修改了部分通用的代码，其他分支也需要修改，直接merge会包含所有修改，如果只想合并当前某次的修改，该怎么做？
-
-* git rebase 变基，应该可以实现，但是可能需要所有分支先进行回退。（未测试，待验证）
-* git cherry-pick 挑选提交，指定提交某次的commit。
-
-**git cherry-pick用法：**
-
-单个commit：git cherry-pick commit_id
-多个commit：git cherry-pick commit_id1..commit_id10 或 git cherry-pick commit_id1^..commit_id10
-
-多个commit时，两个的差异在于`^`符号，表示为半开区间，即不包含commit1，包含commit10。
-
-多个时建议使用rebase（具体不清楚）。
-
-拉取多个commit时，中间有可能会有冲突，遇到冲突会停止，即后面的不会继续同步。解决冲突并add之后可以选择是否继续同步：
-
-```
---quit                end revert or cherry-pick sequence 停止
---continue            resume revert or cherry-pick sequence 继续
---abort               cancel revert or cherry-pick sequence 取消
-```
-
 ##### 39、Xcode 10 New Build System pod package 打包 framework 报错
 
 Xcode 10 的默认编译系统变成了**New Build System**，之前为**Legacy Build System**。更新Xcode10之后有可能会编译报错。
@@ -414,14 +390,6 @@ Multiple commands produce '/User/...../Info.plist'
 > 由于**New Build System**是新的编译系统，还是尽量要接受，毕竟包含更先进的方法，是以后的趋势。
 
 Cocoapods-packager 打包插件使用的是默认编译系统，所以在Xcode 10环境下打包，也会报错，由于不会修改插件，所以也尽量采用第二种方式解决吧。
-
-##### 40、git log 与 git reflog
-
-git log：输出所有的 commit 记录。
-
-git reflog: 输出所有修改 HEAD 的记录。
-
-> 在一次 reset 到错误的 commit id 后，没记住最新的 commit id，差点重写后面所有的修改。
 
 ##### 41、Xcode Playground 自动运行卡住，一直处于Running App 状态
 
@@ -470,10 +438,6 @@ NSNotFound: 是 NSIntegerMax。当字符串为 nil 时，通过`rangeOfString:`�
 ##### 43、 mas 下载应用报错“无法使用此 Apple ID 重新下载”
 
 苹果下载应用分为两步，先“获取”，然后安装，报错原因是还未获取（未添加到已购项目中），所以无法下载安装，添加之后就可以下载了。
-
-##### 44、 git 修改 commit 的信息
-
-修改最后一次 commit 信息： git commit --amend
 
 ##### 45、 什么是User-Agent
 
