@@ -83,6 +83,18 @@ GIT不仅仅是个版本控制系统，它也是个内容管理系统(CMS),工�
 
 修改最后一次 commit 信息。
 
+### git stash
+
+存储当前的修改。项目已经进行了一部分，此时要切换到去做其他的紧急修改，但又不想放弃已经做完的工作，可以用此命令，将修改部分进行存储，并且可以进行多次存储。
+
+```
+git stash list 查看所有的存储列表。
+git stash pop 将存储栈顶的修改覆盖到当前工作区。
+git stash apply stash@{num} 使用指定存储覆盖到工作区，apply后不跟参数等同于pop。
+git stash apply --index 待补充。
+git stash drop stash@{num} 移除指定存储。
+```
+
 
 ## 扩展 git-extras
 
