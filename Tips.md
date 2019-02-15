@@ -380,16 +380,14 @@ Multiple commands produce '/User/...../Info.plist'
 1) Target 'your target' has copy command from '/Users/.../Two/Info.plist' to 'var/..../Info.plist'
 ```
 
-两个不同路径下的同名文件被拷贝到一起，所以报错。
+新的编译系统下不允许出现多个Info.plist文件。
 
 两种解决方案:
 
 1. File -> Project Settings / Workspace Settings 修改 Build System 为 Legacy Build System。
 2. project -> target -> Build Phases -> Copy Bundle Resources 删除冲突的Info.plist。
 
-> 由于**New Build System**是新的编译系统，还是尽量要接受，毕竟包含更先进的方法，是以后的趋势。
-
-Cocoapods-packager 打包插件使用的是默认编译系统，所以在Xcode 10环境下打包，也会报错，由于不会修改插件，所以也尽量采用第二种方式解决吧。
+> Cocoapods-packager 打包插件使用的是默认编译系统，所以在Xcode 10环境下打包，也会报错，由于不会修改插件，所以采用第二种方式解决。
 
 ##### 41、Xcode Playground 自动运行卡住，一直处于Running App 状态
 
