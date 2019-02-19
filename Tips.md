@@ -447,3 +447,8 @@ User-Agent是Http协议中的一部分，属于头域的组成部分，User Agen
 
 在64位系统中，为了优化 NSNumber NSString等小对象的存储，将数据直接存储在指针地址中。
 
+##### 47、setNeedsDisplay 和 setNeedslayout
+
+两个方法都是异步执行的。就字面意思理解：setNeedsDisplay 是标记为将要显示了，setNeedslayout 是标记为需要重新布局。
+
+setNeedsDisplay 之后会调用 drawRect: 进行绘图。setNeedslayout 之后会调用 layoutSubViews 进行重新布局。
