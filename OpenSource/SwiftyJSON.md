@@ -26,6 +26,7 @@ fileprivate var rawBool: Bool = false
 重定义JSON的 **subscript**， 可以通过下标取值，并且取值依然为JSON。为JSON添加Array、dic、bool等字面量协议，使JSON在为任何类型是都可以通过字面量取值。
 
 为各个类型添加可选类型，并重写get set方法，设置取值时进行判断当前类型。
+
 ```
  //Optional string
     public var string: String? {

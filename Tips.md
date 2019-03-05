@@ -452,3 +452,10 @@ User-Agent是Http协议中的一部分，属于头域的组成部分，User Agen
 两个方法都是异步执行的。就字面意思理解：setNeedsDisplay 是标记为将要显示了，setNeedslayout 是标记为需要重新布局。
 
 setNeedsDisplay 之后会调用 drawRect: 进行绘图。setNeedslayout 之后会调用 layoutSubViews 进行重新布局。
+
+##### 48、 swift 中使用预处理
+
+swift 支持 #if / #else/ #endif 的操作，类似于OC中的预处理宏定义。OC中是设置在Preprocessor Macros中，swift是要设置在 other swift flags中，且前要加上`-D`，可以写成`-DDEBUG`、`-D DEBUG`或者`"-D" "DEBUG"`。
+
+![参考](https://www.cnblogs.com/Bob-wei/p/5237761.html)
+
