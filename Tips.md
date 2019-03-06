@@ -459,3 +459,10 @@ swift 支持 #if / #else/ #endif 的操作，类似于OC中的预处理宏定义
 
 ![参考](https://www.cnblogs.com/Bob-wei/p/5237761.html)
 
+##### 49. swift 三方库报错
+
+由于swift版本更新，很多三方库没有及时更新，或者本地的三方库版本过低，跟项目中默认的swift版本不同，导致的编译报错，可通过以下方式解决
+
+1. 升级三方库。
+2. 在该Pod的Target的 `swift language version` 中设置版本。
+3. 在Podfile文件中，通过hook的方式，设置swift版本（CocoaPods post_install）。
