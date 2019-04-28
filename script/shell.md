@@ -150,6 +150,22 @@ b=$(awk 'BEGIN{print 2.1-0.3 }')
 echo $b
 ```
 
+### Mac 剪贴板
+
+自带剪贴板命令：pbcopy 和 pbpaste
+
+```
+# 写入剪贴板
+$ echo "yisimengba" | pbcopy
+# 或者
+$ echo pbcopy < echo "yisimengba"
+
+# 读取剪贴板
+$ pbpaste
+# 保存内容到文件
+$ pbpaste > ~/yisimengba.txt
+```
+
 ## 笔记
 
 1. $- 相当于当前shell的运行参数，根据参数里是否有 i 来判断是否交互模式。
