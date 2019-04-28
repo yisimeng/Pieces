@@ -79,20 +79,57 @@ ARGS=`getopt -o ab:c:: --long along,blong:,clong:: -n 'example.sh' -- "$@"`
 * -p 　列出所有的shell赋予程序的环境变量。
 
 
-### 字符串截取
+### 从指定字符（子字符串）截取
 
-我们可以用${ }分别替换获得不同的值： file=/dir1/dir2/dir3/my.file.txt
+这种截取方式无法指定字符串长度，只能从指定字符（子字符串）截取到字符串末尾。Shell 可以截取指定字符（子字符串）右边的所有字符，也可以截取左边的所有字符。
 
-1. ${file#*/}：拿掉第一条/及其左边的字串：dir1/dir2/dir3/my.file.txt
-2. ${file##*/}：拿掉最后一条/及其左边的字串：my.file.txt
-3. ${file#*.}：拿掉第一个.及其左边的字串：file.txt
-4. ${file##*.}：拿掉最后一个.及其左边的字串：txt
-5. ${file%/*}：拿掉最后条/及其右边的字串：/dir1/dir2/dir3
-6. ${file%%/*}：拿掉第一条/及其右边的字串：（空值）
-7. ${file%.*}：拿掉最后一个.及其右边的字串：/dir1/dir2/dir3/my.file
-8. ${file%%.*}：拿掉第一个.及其右边的字串：/dir1/dir2/dir3/my
+#### 1. 使用 \# 号截取右边字符串
 
-其中的“.”和“/”可以替换成其他字符串，用于字符串截取。
+`${string#*chars}`
+
+意思是忽略左边所有字符，截取chars之后的所有字符。string 表示要截取的字符串，chars 是指定的字符（或字符串），* 是通配符表示任意长度。
+
+```
+url="https://github.com/yisimeng/Pieces.git"
+echo ${url#*:}
+
+输出： //github.com/yisimeng/Pieces.git
+```
+
+**注意**：chars 可以是字符也可以是字符串，遇到即止。
+
+* 上例中，`echo ${url#*s:}`，`echo ${url#*ps:}`，`echo ${url#*https:}`，最终答案都一样。
+* 如果chars为“/”，那么遇到第一个“/”，截取为：`/github.com/yisimeng/Pieces.git`。
+
+如果希望从最后一个指定字符开始截取右边的字符串，可以用`##`
+
+`${string##*chars}`
+
+```
+url="https://github.com/yisimeng/Pieces.git"
+echo ${url#*/}
+echo ${url##*/}
+
+输出： 
+/github.com/yisimeng/Pieces.git
+Pieces.git
+```
+
+#### 2. 使用 % 截取左边字符串
+
+`${string%chars*}`
+
+因为要截取左边字符串，所以使用`*`忽略右边的字符串。具体使用与上面类似。
+
+```
+url="https://github.com/yisimeng/Pieces.git"
+echo ${url%/*}
+echo ${url%%/*}
+
+输出： 
+https://github.com/yisimeng
+https:
+```
 
 ## 笔记
 
