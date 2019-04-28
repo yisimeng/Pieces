@@ -131,6 +131,25 @@ https://github.com/yisimeng
 https:
 ```
 
+### 计算
+
+整数计算: expr。 中间必须有空格:
+
+```
+a=`expr 3 - 1`
+echo $a
+```
+
+浮点运算：不支持浮点运算，可以借助 bc, awk 处理：
+
+```
+a=$(echo "2.1-0.3"|bc)
+echo $a
+
+b=$(awk 'BEGIN{print 2.1-0.3 }')
+echo $b
+```
+
 ## 笔记
 
 1. $- 相当于当前shell的运行参数，根据参数里是否有 i 来判断是否交互模式。
