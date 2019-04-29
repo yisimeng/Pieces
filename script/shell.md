@@ -30,8 +30,10 @@ Linux下的 sed 是GPL的，Mac的是BSD的，所以使用起来有些不同，M
 **内容替换**
 
 ```
-# 将old替换为new
-$ sed -i “.tmp” ’s,old,’”new”’,’ file
+# 将old替换为new, 's' 前面可以指定行号，否则是整文匹配。
+$ sed -i ".tmp" 's,old,new,' file
+# 或者
+$ sed -i ".tmp" 's/old/new/' file
 ```
 
 **按行删除**
@@ -41,11 +43,14 @@ $ sed -i “.tmp” ’s,old,’”new”’,’ file
 $ sed -i “.tmp” ‘5d’ file 
 ```
 
-**整行替换**： 通过正则将整行内容作为匹配的字符串
+**整行替换**： 
 
 ```
+# 通过正则 '^.*' 将整行内容作为匹配的字符串
 # 将第 2 行内容替换为 sss
 $ sed -i "" '2s/^.*/sss/' test.txt
+# 或者
+$ sed -i "" '2s,^.*,sss,' test.txt
 ```
 
 **注意：**“.tmp”为备份扩展名，为空则不备份，如果恰好磁盘耗尽，文件可能损坏。
