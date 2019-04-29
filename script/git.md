@@ -95,6 +95,10 @@ git stash apply --index 待补充。
 git stash drop stash@{num} 移除指定存储。
 ```
 
+### git push origin master --force
+
+在后面添加 '--force',强制推送到远程，覆盖远程仓库。
+
 
 ## 扩展 git-extras
 
