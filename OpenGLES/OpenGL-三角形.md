@@ -73,7 +73,7 @@ float vertices[] = {
 
 ### 顶点缓冲对象 VBO（Vertex Buffer Objects）
 
-显存中存储的顶点数据。数据由CPU发送至显卡之后，顶点着色器立即能访问顶点。
+通过顶点缓冲对象管理GPU上存储顶点数据的内存。数据由CPU发送至显卡之后，顶点着色器立即能访问顶点。
 
 ```
 // 使用唯一ID生成 VBO 对象
@@ -113,7 +113,7 @@ void main()
 }
 ```
 
-源码存放于字符串中。
+gl_Position 是预定义的位置输出变量，是vec4类型
 
 **向量** 前三个分量用顶点数据，第四个分量是用于透视除法上。
 
@@ -262,6 +262,9 @@ glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 **线框模式**（Wireframe Mode）：`glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)`, $1 表示应用到三角形的正面和背面，$2 表示以线框绘制，默认为：GL_FILL。
 
+### 重点理解！！！！：
 
-
+* VBO 是管理显存中的数据的。
+* VAO 是存储顶点属性调用的。
+* EBO 是存储顶点数据索引的。
 
