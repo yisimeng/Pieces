@@ -36,11 +36,16 @@ $ sed -i ".tmp" 's,old,new,' file
 $ sed -i ".tmp" 's/old/new/' file
 ```
 
-**按行删除**
+**删除行**
 
 ```
 # 删除第5行
 $ sed -i “.tmp” ‘5d’ file 
+```
+
+```
+# 删除匹配到"sss"的行
+$ sed -i "" '/sss/d' test.txt
 ```
 
 **整行替换**： 
