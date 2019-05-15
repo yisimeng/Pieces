@@ -254,7 +254,7 @@ glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 ```
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 //由于传的是索引当做缓冲目标，所以最后绘制要使用glDrawElements函数，来指明从索引缓冲渲染。
-// 指明绘制三角形：顶点格式：索引的类型：EBO中的偏移量
+// 指明绘制三角形：顶点个数：索引的类型：EBO中的偏移量
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 ```
 
