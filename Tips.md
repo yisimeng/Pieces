@@ -457,12 +457,18 @@ setNeedsDisplay 之后会调用 drawRect: 进行绘图。setNeedslayout 之后�
 
 swift 支持 #if / #else/ #endif 的操作，类似于OC中的预处理宏定义。OC中是设置在Preprocessor Macros中，swift是要设置在 other swift flags中，且前要加上`-D`，可以写成`-DDEBUG`、`-D DEBUG`或者`"-D" "DEBUG"`。
 
-![参考](https://www.cnblogs.com/Bob-wei/p/5237761.html)
+[参考](https://www.cnblogs.com/Bob-wei/p/5237761.html)
 
-##### 49. swift 三方库报错
+##### 49、 swift 三方库报错
 
 由于swift版本更新，很多三方库没有及时更新，或者本地的三方库版本过低，跟项目中默认的swift版本不同，导致的编译报错，可通过以下方式解决
 
 1. 升级三方库。
 2. 在该Pod的Target的 `swift language version` 中设置版本。
 3. 在Podfile文件中，通过hook的方式，设置swift版本（CocoaPods post_install）。
+
+##### 50、 重连调试进程
+
+debug到真机上的进程，在断开连接之后，重新连线，继续debug的操作步骤：
+
+Xcode菜单栏 -> Debug -> Attach to Process/Attach to Process by PID or Name.. -> 选择进程。
