@@ -472,3 +472,12 @@ swift 支持 #if / #else/ #endif 的操作，类似于OC中的预处理宏定义
 debug到真机上的进程，在断开连接之后，重新连线，继续debug的操作步骤：
 
 Xcode菜单栏 -> Debug -> Attach to Process/Attach to Process by PID or Name.. -> 选择进程。
+
+##### 51、 session 与 context
+
+在iOS框架中，一般带 session 和 context 后缀的类的作用：
+
+1. 管理其他类，负责沟通，可以很好的解耦。
+2. 帮助管理复杂环境的内存。
+
+两者不同之处：一般与硬件交互，例如摄像头（AVCaptureSession）、网卡（NSURLSession）等。没有硬件参与一般用context，例如绘图、自定义转场动画上下文等。
