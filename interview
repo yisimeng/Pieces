@@ -1,0 +1,194 @@
+
+1. UIViewController 的声明周期，各个节点都在做什么？
+	* init： 初始化
+	* loadView: 加载自带view，这时可以替换自带view
+	* viewDidLoad: view加载完成，此时可以加载controller中所需要的资源，或者subview
+	* viewWillAppear: view 将要显示，此时一般不要做耗时操作，以免影响view显示或卡顿
+	* viewDidAppear: view 已经添加到窗口上
+	* viewWillDisappear: 将要消失
+	* viewDidDisappear: 已经消失,
+	* dealloc：释放资源
+2. 类，类别，协议
+	类：某一特征事物的抽象组合，有属性，方法。
+	类别：可以为类进行扩展，添加属性（需要使用关联对象添加存储属性）和方法
+	协议：将某一类型的方法和属性抽象出来，只有声明，没有实现，被遵循的类来实现。
+3. 10个UI控件
+	UIView: 作为呈现内容的载体
+	UILabel: 标签
+	UIButton: 按钮
+	UITextField: 输入框
+	UITextView: 输入框，可滚动多行的
+	UIScrollView: 滚动视图
+	UITableView: 列表视图  UITableViewCell
+	UICollectionView: 集合视图 UICollectionViewCell
+	UISwitch: 选择器
+	UIProgress: 进度条
+	UIImageView: 图片视图
+	UIWindow UIWebView 
+4. UIButton 的父类，父类的父类
+	UIButton->UIControl->UIView->UIResponder->NSObject
+5. KVC/KVO
+	KVC: key-value-code键值编码，setValueForKey: 直接赋值
+	KVO：Key-value-observer键值观察者，观察对象属性的改变
+6. 推送的原理和步骤，证书的作用
+	原理：app后台发送推送信息->Apple Push Notification service->下发至手机->通知app
+	步骤：
+	1. 连接APNs注册UUID
+	2. APNs返回deviceToken给APP
+	3. APP将token 发送给app后台
+	4. app将推送信息和token发送至APNs
+	5. APNs通过token，查找到设备的UUID，将信息发送至对应的设备
+	6. 设备在区分对应的APP，发出推送
+	证书：为了确保信息安全，确定身份，防止篡改，不可否认
+7. UITableViewDelelgate/DataSource 中常用方法
+	Delegate: didSelectAtIndex willDisplay viewForHeaderInSection
+	DataSource: numberOfSectionInTableView numberOfRowInSection cellForRow 
+8. block/delegate/notification 使用场景
+	block 一般使用从前向后传值 delegate 从后向前 通知是全局传值
+9. 如何安装app到设备
+	通过Xcode开发者证书安装，AppStore， 企业版证书安装，ad-hoc证书安装，TestFlight 安装
+10. 常见崩溃，解决方法和思路
+	内存溢出，方法不识别，
+	看日志
+## 进阶
+
+1. UICollectionView与UITableView的异同
+	都是集合视图的表现，但是UICollectionView的功能更加强大，做瀑布流啥的
+2. CALayer 的常用子类，作用
+	CAShapeLayer 形状，CAGradientLayer 渐变，CATextLayer 文字，CAScrollLayer 滚动, CAEmitterLayer 粒子动画
+3. native 与 js 交互的方式有哪些，如何选择
+	拦截URL:适用于UIWebView和WKWebView
+	JavaScriptCore:适用于UIWebView，iOS7+
+	WKScriptMessageHandler:适用于WKWebView,iOS8+
+	WebViewJavaScriptBridge:适用于UIWebView和WKWebView,第三方框架
+4. 常用属性关键字，区别，用途
+	mrc:
+	retain:+1，强引用，防止释放
+	arc:
+	strong:+1，强引用
+	weak: 弱引用
+	copy:+1,复制一份并引用，原计数不变
+	
+	assign: 指定setter方法使用简单赋值，用于修饰基础类型	
+
+	atomic: 原子性，线程安全
+	nonatomic: 非原子性，线程不安全
+5. ARC相较于MRC做了什么，何时做的，为什么做
+	编译器在编译前，在代码中合适位置插入retain/release，简化代码和内存管理。
+6. 写一个单例，举例几个单例的实现逻辑和应用场景
+	```
+	static Manager * manager = nil;
+	+ (Manager)shareInstance{
+		if (manager == nil) {
+			static dispatch_once_t onceToken;
+			dispatch_once(&onceToken, ^{
+				manager = [[Manager alloc] init];
+			});
+		}
+		return manager;
+	}
+	```
+	
+	NSUserDefault,NSNotificationCenter,NSFileManager,NSHTTPCookieStorage,UIApplication
+	一般用于全局只有一份实例，为了节省消耗（DateManager），当前用户信息等。
+7. Analyze、断点和LLDB的常用场景
+	Analyze:静态分析，检测内存泄漏
+	断点：断点崩溃位置
+	LLDB：调试，输出断点位置参数信息。
+8. 如果使用Instruments分析，解决，优化内存/性能问题
+	Leaks:运行之后，❌位置为内存泄漏
+	    ：检测卡顿
+	   ：调试弱网
+9. Git的常用命令，分支管理方式，预防和解决冲突的方法
+	clone, pull, push, add, commit, checkout, branch, tag...
+	Master：正式版线上
+		|→dev分支：开发分支
+			|→version分支
+	无用文件加入.gitignore,push之前先pull，在本地解决冲突，尽量避免使用XIB或StoryBoard做复杂页面布局。
+10. iOS多线程技术有哪些？之间的联系和区别
+	NSThred:需要手动管理线程生命周期
+	GCD:轻量级多线程
+	NSOperation:重量级
+	NSObject:
+高阶
+1. Class的结构体内容，意义
+	isa:指针，指向元类型
+	method_list：方法列表
+	cache_list: 方法缓存列表
+	property_list: 属性列表
+	ivar_list: 实例变量列表
+	protocol_list：协议列表
+2. Runtime的实现机制，做过什么
+	msgSend,消息发送，转发
+	a. 调用resolveInstanceMethod：方法，如果方法是使用dynamic修饰而动态添加的方法，会返回YES，通过class_addMethod动态添加方法处理消息。否则进入下一步
+	b. 调用forwardingTargetForSelector：方法，用于指定那个对象来响应消息，把消息转发给目标对象去处理。否则进入下一步
+	c. 调用methodSignatureForSelector:进行方法签名，把函数的参数类型和返回值进行封装，如果返回nil,报错方法不能识别。如果返回了methodSignature,进入forwardInvocation修改实现方法，相应对象等，成功则消息处理结束，否则报错方法不能识别。
+	多播代理，动态添加方法，属性。
+3. Runloop工作机制，有哪些模式，应用场景
+	运行循环，do-while，在需要处理事件是，让线程忙起来，不需要时进入休眠。
+	线程保活，定时器，NSTimer滑动时暂停
+	NSDefaultRunLoopMode,NSConnectionReplyMode,NSModalPanelRunLoopMode,NSEventTrackingRunLoopMode,NSRunloopCommonModes。
+	应用场景：线程保活、NSTimer和UITableView滑动冲突、
+4. OSI模型结构，数据包，TCP，UDP，HTTP，Socket详解
+	OSI七层从下到上：物理层，数据链路层，网络层，传输层，会话层，表示层，应用层。
+	数据包：
+	TCP：面向连接可靠的传输层协议，使用校验和，确认重传机制保证可靠传输，使用滑动窗口进行流量控制，动态改变窗口进行拥塞控制
+	UDP：面向无连接不可靠的传输层协议，支持广播和多播
+	HTTP：超文本传输协议，是应用层协议，构建与TCP之上
+	Socket：套接字
+5. BLE 的通信原理 Peripheral,Service,characteristic和Central的关系
+
+6. Apple对HTTPS的要求，S代表什么，是如何保证通信安全的
+
+7. 常用HTTP抓包工具，如何抓包HTTPS，如果抓包TCP，UDP请求
+	Charls,
+	信任证书，在客户端请求时，Charls相当于服务器的角色，然后Charls模拟客户端向服务器发送请求，返回后，Charls作为服务器将数据返回给客户端
+	Wireshark
+8. 常用加密算法有哪些？对比可逆和不可逆算法，对比对称和非对称加密算法
+	MD5、RSA、Base64、
+	MD5是不可逆的，即不可逆推出原数据，所以不算是真正的加密算法，属于HASH
+	对称加密使用的是相同的秘钥进行加密解密、非对称加密算法使用公钥加密、私钥解密
+9. 如何在app中保证数据安全，加密算法的选择原则，签名算法的协商方式，cookie的安全机制
+	私密数据不明文存储、传输，使用HTTPS网络请求
+	
+	设置cookie的过期时间，HttpOnly属性为true以防止js脚本读取cookie信息，加密cookie
+10. iOS尾调用优化，Winding Rules缠绕规则，字符串存储优化，三方库创建、引入管理方式
+	尾调用：函数的最后是仅仅调用一个函数。优化：进入函数，会将函数进行压栈，结束后出栈，一直不断调用会造成栈溢出，尾调用优化，是在执行到最后一步调用其他函数时，先将当前函数出栈，在压栈其他函数
+	Winding Rules：分为非零缠绕和奇偶缠绕，非零：从左至右穿过路径一次+1，从右至左穿过-1，总和为0则在路径之内需要渲染。奇偶：计算穿过总数，偶数在路径之外，不需要渲染，奇数在路径之内需要渲染。
+	字符串存储优化：当字符串较短时，会直接将字符串存入指针区域
+	三方库：CocoaPods 创建本地工程，写三方库的代码，修改podspec，打tag提交，将podspec文件push到本地的Specs仓库，会自动推送到远程Specs。
+
+算法
+1. A的女儿是B女儿的妈妈，A和B的关系
+	采用逆推法，
+	a. 首先B的女儿（假定为C）是辈分最小的，C是B的女儿，那么B是C的爸爸或者妈妈;
+	b. A的女儿（假定为D）是C的妈妈，即D是C的妈妈；
+	c. 分情况分析：B如果是C的妈妈，那么B和D是同一人，即为A的女儿，A是B的爸爸或者妈妈（第一、二个答案）；
+		       B如果是C的爸爸，那么B是D的丈夫，即B娶了A的女儿D，那么A是B的岳父或者岳母（第三、四个答案）
+2. 常用排序算法，使用场景
+	冒泡：数据量小时，时间复杂度为O(n^2)
+	快排：数据量适中，时间复杂度为O(n*logn)
+	希尔：数据量较小，时间复杂度为O(n*logn)
+	堆排：数据量较大，时间复杂度为O(n)
+	归并：
+	选择：数据量较小，时间复杂度为O(n^2)
+3. 一元二次方程的求解公式，顶点公式，对应的曲线图形
+	
+	抛物线
+4. 二叉树的遍历方式，平衡二叉树概念，依次插入方式建树方法
+	先序遍历：根节点->左->...->右
+	层序遍历：根节点->左->右->...
+	后序遍历：左->右->根节点...
+	平衡二叉树：为空子树，或者左右子树的高度差不超过1，且左右子树也是平衡二叉树
+
+5. 一对古玩核桃20w，摔坏一个，另一个值多少钱？如果是两件一样的古董呢？
+	核桃是成对的，摔坏一个另一个将不值钱。
+	两件相同的古董，摔坏一个，另一个价值将翻倍，物以稀为贵。
+
+周边问题
+1. 最新的iOS系统/设备有什么新特性，是否使用过
+2. 猜测未来会发布的iOS的新特性或者硬件
+3. 平常看书、电影、看剧么？尝试介绍一下
+4. 有技术博客么？写了什么内容，多少关注
+5. 线下分享过技术么，受众多少，效果如何
+	
