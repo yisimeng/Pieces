@@ -328,6 +328,15 @@ ARCollaborationData
 * Physics World
 
 
+## Tips
+
+### 1. worldPosition VS position vs simdPosition
+
+* worldPosition：相对于场景世界原点（0，0，0）的位置。
+* position：如果父节点是根节点，那么等同于worldPosition，否则是相对于父节点的位置。
+* simdPosition：是position的simd类型数据，使用simd相关函数进行大量向量计算性能更好。
+
+
 
 
 
