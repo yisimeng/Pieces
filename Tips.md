@@ -481,3 +481,7 @@ Xcode菜单栏 -> Debug -> Attach to Process/Attach to Process by PID or Name.. 
 2. 帮助管理复杂环境的内存。
 
 两者不同之处：一般与硬件交互，例如摄像头（AVCaptureSession）、网卡（NSURLSession）等。没有硬件参与一般用context，例如绘图、自定义转场动画上下文等。
+
+##### 52、 error: No signing certificate "iOS Development" found: No "iOS Development" signing certificate matching team ID "xxxx" with a private key was found.
+
+证书文件没有导入或已失效，重新导入证书。
