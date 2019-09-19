@@ -485,3 +485,7 @@ Xcode菜单栏 -> Debug -> Attach to Process/Attach to Process by PID or Name.. 
 ##### 52、 error: No signing certificate "iOS Development" found: No "iOS Development" signing certificate matching team ID "xxxx" with a private key was found.
 
 证书文件没有导入或已失效，重新导入证书。
+
+##### 52、 xxx.modulemap not found
+
+使用pod-packager编译swift库报错，[GitHub的issure](https://github.com/CocoaPods/cocoapods-packager/issues/211)
