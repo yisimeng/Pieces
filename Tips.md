@@ -488,4 +488,44 @@ Xcode菜单栏 -> Debug -> Attach to Process/Attach to Process by PID or Name.. 
 
 ##### 52、 xxx.modulemap not found
 
-使用pod-packager编译swift库报错，[GitHub的issure](https://github.com/CocoaPods/cocoapods-packager/issues/211)
+使用pod-packager编译swift库报错，暂时未解决。[GitHub的issure](https://github.com/CocoaPods/cocoapods-packager/issues/211)
+
+##### 53、 ViewController中的Timer的正确用法
+
+ViewController中使用Timer的主要问题：
+
+* ViewController强引用Timer，Timer又将target设为ViewController，造成的循环引用。
+
+> 1. Timer的target是强引用，如果将ViewController弱引用持有Timer，ViewController会迟迟走不到dealloc中，无法将Timer销毁，所以ViewController依然无法被释放，还是循环引用。
+> 2. 将销毁Timer放到viewDidDisappear等方法中，如果是从ViewController中push到其他的VC中，会导致Timer被销毁，pop之后还需要重新设置Timer。
+
+因此需要一个第三方打破这种循环引用，初始化一个TimerHandler作为ViewController的属性（强引用），初始化Timer设置targe为TimerHandler（强引用），设置ViewController作为TimerHandler的delegate（弱引用），在ViewController的dealloc方法中将Timer置空。
+
+```
+	ViewController-->Timer-->TimerHandler
+		 ∧_________(弱引用)________|
+
+```
+
+当ViewController被pop之后，只有一个TimerHandler的弱引用，没有其他强引用，所以ViewController会调用dealloc方法，将Timer置空，Timer被销毁后，Timer强持有的TimerHandler也因为失去强引用，所以会走到dealloc方法销毁，打破了循环引用的问题。
+
+当从ViewController中push到其他VC时，因为Timer并没有被销毁，因此再pop回来时依然正常使用，不需要重新启动Timer。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
