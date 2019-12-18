@@ -200,3 +200,9 @@ $ pbpaste > ~/yisimengba.txt
 ## 笔记
 
 1. $- 相当于当前shell的运行参数，根据参数里是否有 i 来判断是否交互模式。
+
+### 读取Xcode工程版本号
+
+```
+VERSION="$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$INFO_PATH")"
+```
