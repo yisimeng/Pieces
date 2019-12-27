@@ -512,7 +512,11 @@ ViewController中使用Timer的主要问题：
 当从ViewController中push到其他VC时，因为Timer并没有被销毁，因此再pop回来时依然正常使用，不需要重新启动Timer。
 
 
+##### 54、 Swift项目中通过CocoaPods引入OC的三方库，关于头文件引入问题
 
+在swift项目中使用CocoaPods引入三方库，需要使用`use_frameworks!`（将三方库以静态库的方式导入）。
+
+在CocoaPods版本0.36及以上在swift中导入OC的pod时不需要桥接头文件，直接在swift文件头部直接`import AFNetworking`即可。
 
 
 
