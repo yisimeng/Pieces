@@ -518,6 +518,7 @@ ViewController中使用Timer的主要问题：
 
 在CocoaPods版本0.36及以上在swift中导入OC的pod时不需要桥接头文件，直接在swift文件头部直接`import AFNetworking`即可。
 
+> [参考](!https://stackoverflow.com/questions/24122914/how-to-integrate-cocoapods-with-a-swift-project)
 
 
 
