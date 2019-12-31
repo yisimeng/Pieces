@@ -521,7 +521,10 @@ ViewController中使用Timer的主要问题：
 > [参考](!https://stackoverflow.com/questions/24122914/how-to-integrate-cocoapods-with-a-swift-project)
 
 
+##### 55、 didMoveToWindow 与 didMoveToSuperview
 
+* didMoveToSuperview：view被添加到父视图上，不一定会显示在屏幕上。
+* didMoveToWindow：view被添加到当前的视图堆栈中。
 
 
 
