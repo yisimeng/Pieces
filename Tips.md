@@ -2,9 +2,9 @@
 
 ##### 1. NSNumberFormatter
 
-	在计算View的frame时，我们通常设置的是自适应，“sizeToFit”,或者是一些通过计算出来的frame，但是实际效果总是跟我们设置的值有些偏差，在经过测试分析后的发现系统在最后确定frame时，会进行舍入，并总是保留一位小数：当“.”后的值小于0.5时，会入成0.5；当等于0.5，会保持不变；当大于0.5，会入成1.0。
+在计算View的frame时，我们通常设置的是自适应，“sizeToFit”,或者是一些通过计算出来的frame，但是实际效果总是跟我们设置的值有些偏差，在经过测试分析后的发现系统在最后确定frame时，会进行舍入，并总是保留一位小数：当“.”后的值小于0.5时，会入成0.5；当等于0.5，会保持不变；当大于0.5，会入成1.0。
 
-	```
+```
 CGFloat frameFormatterNumber(CGFloat number){
     NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
     //允许1位小数
@@ -15,22 +15,23 @@ CGFloat frameFormatterNumber(CGFloat number){
     formatter.roundingMode = kCFNumberFormatterRoundUp;
     return [[formatter stringFromNumber:[NSNumber numberWithFloat:number]] floatValue];
 }
-	```
-当我们根据label中的文字,通过```- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(nullable NSDictionary<NSString *, id> *)attributes context:(nullable NSStringDrawingContext *)context```方法计算完之后在转换，获得准确的label的frame。
+```
 
+当我们根据label中的文字,通过```- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(nullable NSDictionary<NSString *, id> *)attributes context:(nullable NSStringDrawingContext *)context```方法计算完之后在转换，获得准确的label的frame。
 
 ##### 2. frame和bounds
 
-	frame是相对于父视图，bounds是相对于子视图的。
+frame是相对于父视图，bounds是相对于子视图的。
 
-	scrollView和其子类，在滚动的时候，size是不变的，但是origin是会发生改变的，向左滑动，origin.x是增加的；向上滑动origin.y是增加的。当初始状态下origin为（0，0），如果向上滑动的了，然后想在屏幕上原来（0,0）的位置添加一个view的话，这时的y值是大于0的。
+scrollView和其子类，在滚动的时候，size是不变的，但是origin是会发生改变的，向左滑动，origin.x是增加的；向上滑动origin.y是增加的。当初始状态下origin为（0，0），如果向上滑动的了，然后想在屏幕上原来（0,0）的位置添加一个view的话，这时的y值是大于0的。
 
 
 ##### 3. UISearchBar
+
 UISearchBar貌似默认是没有回收时的动画的，最后加了一个动画，让它取消第一响应。。。。
 
- 
 #####  4、UITabBarController
+
 当重写navigationController的方法```pushViewController(_ viewController: UIViewController, animated: Bool)```时，如果我们用到tabbarController的话，一般会在这里统一设置hidesBottomBarWhenPushed属性为true，当push的时候隐藏掉tabbar。
 
 ```
@@ -39,6 +40,7 @@ override func pushViewController(_ viewController: UIViewController, animated: B
         super.pushViewController(viewController, animated: animated)
 }
 ```
+
 但是这是有问题的,刚启动就找不到tabbar了，设置rootViewController的时候也会走这个方法，导致第进来之后就直接隐藏掉tabbar了```public init(rootViewController: UIViewController) // Convenience method pushes the root view controller without animation.```
 
 
@@ -78,9 +80,14 @@ drawRect调用的前提：
 ##### 7、Category属性问题
 不能再分类中给已有类添加存储属性，可以添加计算属性（UIView的left，right）。分类中的属性只会创建setter和getter方法，不会生成实例变量，所以在setter和getter方法中无法赋值。
 
+* **不能向编译后得到的类中增加实例变量**
+* **能向运行时创建的类中添加实例变量**
+
+1. 因为编译后的类已经注册在 runtime 中,类结构体中的 `objc_ivar_list` 实例变量的链表和 `instance_size` 实例变量的内存大小已经确定，同时runtime会调用 `class_setvarlayout` 或 `class_setWeaklvarLayout` 来处理strong weak 引用。所以不能向存在的类中添加实例变量。
+2. 运行时创建的类是可以添加实例变量，调用`class_addIvar`函数。但是得在调用 `objc_allocateClassPair` 之后，`objc_registerClassPair` 之前，原因同上.
 
 ##### 8、循环引用
-1. A强引用B，B抢引用A。
+1. A强引用B，B强引用A。
 2. A有个属性为block，在block中又调用A（A在进入block中时，block会强引用A）。
 3. 在viewcontroller中使用timer，在dealloc中释放timer，只要timer活跃，就不会进入到dealloc。需要在viewDidDisapper中释放timer。
 
