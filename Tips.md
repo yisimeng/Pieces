@@ -64,7 +64,6 @@ override func pushViewController(_ viewController: UIViewController, animated: B
 **强制解压缩**
 图片的解压缩是不可避免的，当未解压缩的图片将要渲染到屏幕时，系统会在主线程对图片进行解压缩，而如果图片已经解压缩了，系统就不会再对图片进行解压缩。为了不让解压缩在主线程执行影响性能，可以在手动在子线程提前进行强制解压缩，强制解压缩的原理就是对图片进行重新绘制，得到一张新的解压缩后的位图。
 
-
 ##### 6、drawRect调用
 drawRect调用的前提：
 
@@ -75,7 +74,6 @@ drawRect调用的前提：
 
 **注意**: drawRect(\_:)方法中的所有绘制都会进入视图的上下文，如果在drawRect(\_:)外部进行绘制，必须创建自己的上下文。
 永远不要直接调用drawRect(\_:)方法，如果想更新视图，调用setNeedsDisplay()，它会将view进行标记，当下一次屏幕更新周期触发drawRect(_:)时重绘。
-
 
 ##### 7、Category属性问题
 不能再分类中给已有类添加存储属性，可以添加计算属性（UIView的left，right）。分类中的属性只会创建setter和getter方法，不会生成实例变量，所以在setter和getter方法中无法赋值。
@@ -90,7 +88,6 @@ drawRect调用的前提：
 1. A强引用B，B强引用A。
 2. A有个属性为block，在block中又调用A（A在进入block中时，block会强引用A）。
 3. 在viewcontroller中使用timer，在dealloc中释放timer，只要timer活跃，就不会进入到dealloc。需要在viewDidDisapper中释放timer。
-
 
 ##### 9、深拷贝与浅拷贝
 集合对象copy：
@@ -111,20 +108,17 @@ drawRect调用的前提：
 * [mutableObject copy] 深拷贝
 * [object mutableCopy] 深拷贝
 
-
 ##### 10、视频直播秒开
 1. 改写播放器逻辑，让播放器拿到第一个关键帧后就给予显示。
 GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器在和服务器建立连接后可以立即拿到关键帧。减少关键帧的距离，是可以改善画质，让播放器快速拿到关键帧，但同时增加了宽带和网络的负载，如果网络不佳，不能快速下载到GOP，会影响体验。
-2. 提前做好DNS解析，和做好测速选线（择取最有线路）。
+2. 提前做好DNS解析，和做好测速选线（择取最优线路）。
 3. 缓存，缓存最近的一个关键帧。
-
 
 ##### 11、图片拉伸的几种方式
 1. 通过UIImage的方法```- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode```来设置图片的可拉伸区域。
 2. 如果是通过Assets添加的图片，则可以在Assets.xcassets中需要设置拉伸的图片，点击右下角的**Show Slicing**，在页面中可视化的去拖动拉伸的区域。
 3. CALyaer有个contentsCenter的属性，这是一个CGRect，定义了一个固定的边框和一个在图层上可拉伸的区域，值是0.0-1.0。在Interface Builder中为Stretching属性。
 <img src="images/5A0B0C3C-045B-446C-8FF8-F0A970B45766.png" width = "250" height = "419" alt="图片名称">
-
 
 ##### 12、+load()与+initialize()方法
 **调用时机**
@@ -137,8 +131,6 @@ GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器�
 * +load():通常用来进行Method Swizzle，尽量避免过于复杂以及不必要的代码。
 * +initialize():一般用于初始化全局变量或静态变量。
 
-
-
 ##### 13、约束布局优先级
 
 当两个控件并排的时候，如果需要优先满足其中之一，可以通过设置约束的优先级来控制。有两个方法：
@@ -146,8 +138,6 @@ GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器�
 “Content Compression Resistance Priority”，也叫内容压缩阻力优先级，该优先级越高，则越晚轮到被压缩。
 
 “Content Hugging Priority”，也叫内容紧靠优先级，该优先级越高，这越晚轮到被拉伸。
-
-
 
 ##### 14、滚动时回收键盘
 
@@ -161,13 +151,9 @@ typedef NS_ENUM(NSInteger, UIScrollViewKeyboardDismissMode) {
 } NS_ENUM_AVAILABLE_IOS(7_0);
 ```
 
-
-
 ##### 15、设置UIView的透明度，影响subView的透明度
 
 解决方案：设置background color的颜色中的透明度。
-
-
 
 ##### 16、在工程中查看是否使用 IDFA
 
@@ -177,13 +163,9 @@ typedef NS_ENUM(NSInteger, UIScrollViewKeyboardDismissMode) {
 
 可以看到那些文件中用到了IDFA，如果用到了就会被显示出来。
 
-
-
 ##### 17、获取手机已安装的应用
 
 [LSApplicationWorkspace](https://github.com/nst/iOS-Runtime-Headers/blob/master/Frameworks/MobileCoreServices.framework/LSApplicationWorkspace.h)
-
-
 
 ##### 18、数字格式化输出
 ```
@@ -212,8 +194,6 @@ typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
 [1243:403] Formatted number string:一亿二千三百四十五万六千七百八十九
 ```
 
-
-
 ##### 19、navigationBar根据滑动距离的渐变色实现
 ```
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -222,8 +202,6 @@ typedef NS_ENUM(NSUInteger, NSNumberFormatterStyle) {
     [[self.navigationController.navigationBar subviews] objectAtIndex:0].alpha = alpha;
 }
 ```
-
-
 
 ##### 20、NSString进行URL编码和解码
 ```
@@ -235,8 +213,6 @@ string = [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacter
 //解码 打印：http://abc.com?aaa=你好&bbb=tttee
 string = [string stringByRemovingPercentEncoding];
 ```
-
-
 
 ##### 22、swift字面量初始化
 
@@ -254,8 +230,6 @@ ArrayLiteralConvertible
 DictionaryLiteralConvertible
 ```
 
-
-
 ##### 23、iOS系统自带悬浮调试框
 
 在 AppDelegate 的 didFinishLaunchingWithOptions 方法中加入两行代码即可。
@@ -270,21 +244,17 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 > Note: 方法在iOS11之后非苹果内部设备不可使用。[iOS11上使用](http://www.cocoachina.com/ios/20171208/21467.html)
 
-
-
 ##### 24、监听系统时间的三个通知
 
 * **NSSystemTimeZoneDidChangeNotification：**监听修改时间界面的两个按钮状态变化
 * **UIApplicationSignificantTimeChangeNotification：** 监听用户改变时间 （只要点击自动设置按钮就会调用）,新的一天开始或者时区变化。 
 * **NSSystemClockDidChangeNotification：** 监听用户修改时间（时间不同才会调用）
 
-
-
 ##### 25、UITableView的headerView/footerView的高度问题
 
-开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下```tableView.tableFooterView = 更改过高度的view```。为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
+开发中如果要动态修改tableView的tableHeaderView或者tableFooterView的高度，需要给tableView重新设置，而不是直接更改高度。正确的做法是重新设置一下```tableView.tableFooterView = 更改过高度的view```。
 
-
+为什么？其实在iOS8以上直接改高度是没有问题的，在iOS8中出现了contentSize不准确的问题，这是解决办法。
 
 ##### 26、自定义聊天输入框弹出键盘修改frame
 
@@ -296,7 +266,6 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 **弹出状态**: inputTextView.top = kDeviceHeight-inputTextView.height-kNavBarHeight-keyBoardHeight
 
-
 ##### 28、找不到CAMetalLayer
 
 原因：需要连接真机。
@@ -305,7 +274,6 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 
 * xib的cell没有注册。 
 * 内存中已经有这个cell的缓存了(也就是说通过你的cellId找到的cell并不是你想要的类型)，这时候需要改下cell的标识
-
 
 ##### 30、Other Linker Flags的作用
 
@@ -323,7 +291,6 @@ Other Linker Flags 的三个参数：```-Objc```,```-all_load```,```-force_load`
 * ```-all_load```（**慎用**）: 链接器会把所有找到的目标文件都加载到可执行文件中。如果项目中不止一个静态库文件，然后又使用的本参数。因为不同的库文件中有可能存在相同的文件，所以有可能会遇到```ld: duplicate symbol```错误，因此在```-ObjC```失效的情况下使用```-force_load```.
 * ```-force_load```: 与-all_load相同，只是在不同库存在相同文件的情况下，只是会加载一个文件，不影响其他文件的按需加载.
 
-
 ##### 31、提交代码到GitHub，图表不计算contributions
 
 代码库的user.email与GitHub账户没有关联。修改本地代码库的邮箱。可以在三个位置配置：
@@ -332,11 +299,9 @@ Other Linker Flags 的三个参数：```-Objc```,```-all_load```,```-force_load`
 * ```~/.gitconfig```: 当前用户，```git config --global user.email "邮箱地址"```。
 * ```repo/.git/config```: 当前仓库， ```git config user.email "邮箱地址"```。
 
-
 ##### 32、 为UIWindow添加view
 
 做悬浮球需求的时候，应该先设置```[window makeKeyAndVisiable]```，使window可见，然后再添加悬浮球，否则悬浮球的层级会出现在rootVC.view的下面。
-
 
 ##### 33、 .gitignore 未生效
 
@@ -354,7 +319,6 @@ git commit -m 'update .gitignore'
 
 在字典中，如果key是以“@”开头，那么objectforkey可以取出value，而valueforkey则会crash。    
 因为valueforkey是KVC的方法，取值是找和指定key同名的属性，查不到时执行valueForUndefinedKey默认是直接抛出NSUndefinedKeyException异常。
-
 
 ##### 35、iOS 申请栈字符空间如果大于1024，需要申请到堆上，否则可能导致未知错误
 
