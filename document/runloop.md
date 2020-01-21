@@ -37,3 +37,30 @@ run loop modes 是要监视的 input sources 和 timer sources，以及要通知
 | Modal | NSModalPanelRunLoopMode(Cocoa) | Cocoa 使用此mode来标识modal panel的事件 |
 | Event tracking | NSEventTrackingRunLoopMode(Cocoa) | Cocoa 使用此mode来限制用户界面跟踪循环期间的传入事件 |
 | Common modes | NSRunLoopCommonModes(Cocoa) / kCFRunLoopCommonModes(Core Foundation) | 这是一组可配置的通用modes，将输入源与此mode关联，也将其与组中每个mode相关联。Cocoa程序中，默认包含default、modal和event tracking mode。Core Foundation 中初始化时只包含 default mode，我们可以使用 `CFRunLoopAddCommonMode` 方法添加自定义modes到集合中 |
+
+### Input Sources
+
+输入源异步传递事件。事件源取决于输入源的类型，输入源通常分为两类。基于端口的和自定义的。系统实现了输入源的两种类型，我们可以直接使用。两者的不同在于如何发送信号。
+
+* 基于端口的: 监听应用的 Mach 端口，通过内核自动发送信号；
+* 自定义的: 监听自定义源的事件，需要从其他线程手动发送信号
+
+创建输入输入源时，将其分配给一个或多个modes。通常情况下，在默认mode中运行runloop，也可以指定自定义mode。如果输入源不在当前监视的mode下，则它生成的事件将被保留，知道runloop运行在正确的mode下。
+
+#### Port-Based Sources
+
+Cocoa和Core Foundation提供了与端口相关的对象和功能来创建基于端口的输入源。
+
+在Cocoa中，不需要直接创建输入源，只需要简单的创建一个port对象，并使用NSPort的方法来添加到runloop中，这个port对象会为你创建并配置好输入源。
+
+在Core Foundation中，需要手动创建port和runloop source，两种情况下都可以使用与端口不透明类型（CFMachPortRef,CFMessagePortRef,CFSocketRef）关联的功能来创建适当的对象。
+
+#### Custom Input Sources
+
+创建自定义输入源，在Core Foundation中需要使用CFRunLoopSourceRef相关的方法。通过多个回调函数来配置自定义输入源，Core Foundation会在不同位置调用这些函数以配置源，处理传入事件，在从runloop中移除时拆除源。
+
+除了定义接收到事件时自定义源的行为，还需要定义自定义事件的交付机制。这些源在单独的线程上运行，负责为输入源提供数据，并在准备好处理数据时向其发送信号。事件传递机制可以自定义，但不要过于复杂。
+
+
+
+
