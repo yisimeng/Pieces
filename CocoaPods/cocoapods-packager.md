@@ -70,3 +70,7 @@ $ pod package xxx.podspec --embedded --force --no-mangling
 > 所以如果使用这种方式打包，需要删除 podspec 文件中的`vendored_frameworks` 和 `vendored_libraries`，将静态库手动导入，并添加search path。
 
 或者改成使用 Xcode 的静态库模板的方式打包，新建 Library target，设置search path。
+
+参考：
+
+1. [SDK开发和打包静态库遇到的坑](http://www.jintiankansha.me/t/kWn6e21gXM)
