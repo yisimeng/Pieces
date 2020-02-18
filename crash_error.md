@@ -49,3 +49,25 @@
 	**描述：**运行时崩溃。
 	
 	**原因：**加载不到bundle文件，bundle没有被添加进ipa中，检查文件是否被添加进工程，并且`Target MemberShip`是否被选上。
+	
+5. Implementing deprecated method
+	
+	消除 Xcode 关于实现了废弃的方法的警告。
+	
+	```
+	#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self performSelector:@selector(updateConstraint) withObject:nil afterDelay:0.1];
+}
+#pragma clang diagnostic pop
+	```
+	
+	消除 Xcode 关于实现了不建议的 API 的警告。
+	
+	```
+	#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+/** 方法实现 */
+#pragma clang diagnostic pop
+	```
