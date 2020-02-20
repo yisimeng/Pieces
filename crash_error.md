@@ -71,3 +71,24 @@
 /** 方法实现 */
 #pragma clang diagnostic pop
 	```
+	
+6. -fprofile-instr-generate
+
+	OC 项目使用 protobuf 添加了 libProtocolBuffers.a，使用 Xcode 编译报错：
+	
+	```
+	"____llvm_profile_runtime",referenced from:
+		___llvm_profile_runtime_user in xxxx.o
+	······
+	```
+	
+	解决方法：在 Other Linker Flags 中添加 `-fprofile-instr-generate`。
+	
+	```
+	-fprofile-instr-generate=<file>
+                          Generate instrumented code to collect execution counts into <file>
+                          (overridden by LLVM_PROFILE_FILE env var)
+  -fprofile-instr-generate
+                          Generate instrumented code to collect execution counts into default.profraw file
+                          (overridden by '=' form of option or LLVM_PROFILE_FILE env var)
+	```
