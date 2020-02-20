@@ -32,3 +32,28 @@ https://www.jianshu.com/p/56e17c8e3a94?utm_campaign=maleskine&utm_content=note&u
 ```Specs satisfying the `Example (from `../`)` dependency were found, but they required a higher minimum deployment target.```
 
 修改 Podfile 中 platform 的版本。
+
+### 4. 当项目中包含 MRC 的文件，脚本编译报错
+
+在 OC 项目中使用 protobuf 时，需要在 【Build Phases】中的【Compile Sources】中的protobuf 的文件 xx.proto.m 后添加 `-fno-objc-arc`， xx.proto.m 是 mrc 的，这样 Xcode 就能编译通过了。
+
+但是在使用 `cocoapods-packager` 插件打包时，现在工程一般都是 ARC， 所以 .podspec 文件中一般是这样设置的 `s.requires_arc = true`。编译时，系统会以所有文件都是 ARC 来编译，导致 xx.proto.m 编译失败。
+
+解决方法：将 MRC 的文件单独出来一个 subspec 来管理，这个 subspec 是非 ARC 的。
+
+```
+  s.default_subspec = 'mrc'
+
+  # 这是需要添加mrc标识的文件，为相对路径
+  non_arc_files = 'Pod/Classes/TimeSocket/Proto/ProtobufReport.pbobjc.m'
+  # 将所有 mrc 文件从项目中排除
+  s.exclude_files = non_arc_files
+  # subspec 为需要添加mrc标识的文件进行设置
+  s.subspec 'mrc' do |sp|
+      sp.source_files = non_arc_files
+      sp.requires_arc = false
+  end
+  
+  ···
+```
+
