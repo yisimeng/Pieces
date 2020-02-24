@@ -87,7 +87,7 @@ drawRect调用的前提：
 ##### 8、循环引用
 1. A强引用B，B强引用A。
 2. A有个属性为block，在block中又调用A（A在进入block中时，block会强引用A）。
-3. 在viewcontroller中使用timer，在dealloc中释放timer，只要timer活跃，就不会进入到dealloc。需要在viewDidDisapper中释放timer。
+3. 在viewcontroller中使用timer，在dealloc中释放timer，只要timer活跃，就不会进入到dealloc。
 
 ##### 9、深拷贝与浅拷贝
 集合对象copy：
@@ -118,13 +118,14 @@ GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器�
 1. 通过UIImage的方法```- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode```来设置图片的可拉伸区域。
 2. 如果是通过Assets添加的图片，则可以在Assets.xcassets中需要设置拉伸的图片，点击右下角的**Show Slicing**，在页面中可视化的去拖动拉伸的区域。
 3. CALyaer有个contentsCenter的属性，这是一个CGRect，定义了一个固定的边框和一个在图层上可拉伸的区域，值是0.0-1.0。在Interface Builder中为Stretching属性。
+
 <img src="images/5A0B0C3C-045B-446C-8FF8-F0A970B45766.png" width = "250" height = "419" alt="图片名称">
 
 ##### 12、+load()与+initialize()方法
 **调用时机**
 
-* +load()方法：官方文档介绍:Invoked whenever a class or category is added to the Objective-C runtime;，意思是说当类被加载到runtime的时候就会运行，也就是说是在**main.m之前**,会根据Compile Sources中的顺序来加载，但还有一个需注意的加载顺序。
-* +initialize()方法：官方文档上介绍:Initializes the class before it receives its first message.意思是在类接收第一条消息之前初始化类。值得注意的点是：类初始化的时候每个类只会调用一次+initialize()，如果子类没有实现+initialize()，那么将会调用父类的+initialize()，也就是意味着父类的+initialize()可能会被多次调用。
+* +load()方法：官方文档介绍:Invoked whenever a class or category is added to the Objective-C runtime;，意思是说当类被加载到runtime的时候就会运行，也就是说是在**main.m之前**,会根据Compile Sources中的顺序来加载，但还有一个需注意的加载顺序：父类 > 子类 > 分类。
+* +initialize()方法：官方文档上介绍:Initializes the class before it receives its first message.意思是在类接收第一条消息之前初始化类。值得注意的点是：类初始化的时候每个类只会调用一次+initialize()，如果子类没有实现+initialize()，那么将会调用父类的+initialize()，也就是意味着父类的+initialize()可能会被多次调用。父类 > 子类，分类会覆盖主类。
 
 **使用场景：**
 
@@ -395,6 +396,7 @@ var result = noOpAny(1) + 2  // Binary operator '+' cannot be applied to operand
 ##### 42、NSString rangeOfString: NSNotFound
 
 NSNotFound: 是 NSIntegerMax。当字符串为 nil 时，通过`rangeOfString:`取得的NSRange 的location和length的值都为0。因此下面判断不严谨：
+
 ```
     NSString * str = nil;
     if ([str rangeOfString:@"aa"].location != NSNotFound) {
