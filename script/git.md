@@ -99,6 +99,9 @@ git stash drop stash@{num} 移除指定存储。
 
 在后面添加 '--force',强制推送到远程，覆盖远程仓库。
 
+### git show commit_id
+
+显示某个 commit_id 中的所有修改，后面可以跟具体的 filename。
 
 ## 扩展 git-extras
 
