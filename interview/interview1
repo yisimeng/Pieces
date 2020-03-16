@@ -36,7 +36,7 @@
 	1. 连接APNs注册UUID
 	2. APNs返回deviceToken给APP
 	3. APP将token 发送给app后台
-	4. app将推送信息和token发送至APNs
+	4. app后台将推送信息和token发送至APNs
 	5. APNs通过token，查找到设备的UUID，将信息发送至对应的设备
 	6. 设备在区分对应的APP，发出推送
 	证书：为了确保信息安全，确定身份，防止篡改，不可否认
