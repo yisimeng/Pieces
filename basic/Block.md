@@ -38,7 +38,7 @@ struct __block_impl {
 2.将我们的创建代码转码为block_impl的构造语句。
 3.将我们的执行语句转码为对block的执行函数的调用。
 
-
+### Block 分类
 
 ** 在Objective-C语言中，一共有3种类型的block： **
 - _NSConcreteGlobalBlock 全局的静态block，不会访问任何外部变量。
@@ -51,3 +51,12 @@ struct __block_impl {
 对堆上的 block 进行 copy 只是增加它的引用记数。
 
 如果栈上的 block 中引用了 __block 类型的变量，在将该 block 拷贝到堆上时也会将 __block 变量拷贝到堆上如果该 __block 变量在堆上还没有对应的拷贝的话，否则就增加堆上对应的拷贝的引用记数
+
+#### 区分Block
+
+* block 未捕获外部局部变量，那么就是**全局**(__NSGloabalBlock__);
+* block 捕获外部局部变量，且没执行过 copy 操作，就是**栈**(__NSStackBlock__);
+* __NSStackBlock__ 执行了 copy 操作，就是**堆**(__NSMallocBlock__)。
+
+ARC 下 block 的 ‘=’ 赋值，表示 copy 操作。
+
