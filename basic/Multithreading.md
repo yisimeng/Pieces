@@ -16,6 +16,30 @@ OC中的属性修饰符```atomic```就是互斥锁。
 
 低优先级的任务首先获取了资源锁时，高优先级在访问资源时会被阻塞，这时如果有个中优先级的任务（不需要访问共享资源），那么它可能会被优先执行，因为此时它的优先级是最高的，高优先级任务是阻塞的。中优先级可能会阻塞着低优先级任务，导致其不能释放资源锁，进而影响到高优先级一直处于等待资源锁的状态。
 
+
+### GCD、NSThread、NSOperationQueue 对比
+
+* GCD 
+	* 抽象程度最高
+	*  默认两种队列：global，main
+	*  可以创建更多的队列：dispatch_queue_create
+	*  可以独占访问：dispatch_barrier_async/dispatch_barrier_sync
+	*  基于线程管理
+	*  硬性限制创建64个线程
+	*  iOS8以后允许cancel（dispatch_block_cancel）
+*  NSOperationQueue
+	*  无默认队列
+	*  应用自己管理创建的队列
+	*  队列为优先级队列
+	*  Operation 可以有不同优先级（通过 queuePriority 属性）
+	*  使用 cancel 可以取消未执行的操作
+	*  可以通过kvo监听任务执行情况
+*  NSThread
+	*  低级封装，最大化控制线程
+	*  自主创建并管理线程、线程池
+	*  线程可以有优先级，系统根据优先级自动调度
+	*  无API监听完成，需要使用互斥量（NSLock）和自定义代码
+
 # 问题
 
 1. 为什么必须要在主线程更新UI？
