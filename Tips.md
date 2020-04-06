@@ -503,6 +503,16 @@ ViewController中使用Timer的主要问题：
 * didMoveToWindow：view被添加到当前的视图堆栈中。
 
 
+##### 56、 静默推送
+
+content-available = 1，表明会告诉系统，远程推送不应展示给用户，而是必须直接传递给应用，与普通推送类似，有可能会唤醒应用。
+
+收到静默推送会走这个方法：
+
+```
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+```
+
 
 
 
