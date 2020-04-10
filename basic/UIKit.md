@@ -40,7 +40,7 @@ typedef enum UIViewAutoresizing : NSUInteger {
 5. UIBarButtonItem用于描述navigationBar上的按钮，也属于Model层。   
 6. UINavigationController导航控制器属于MVC中的C层，主要管理视图控制器的切换（视图切换和Bar切换），并伴有动画效果。    
 7. 视图控制器控制自己的布局和事件处理，导航控制器只负责切换，重要属性有viewControllers，navigationBar。
-    
+   
 
 
 ## UICollectionView
@@ -56,6 +56,32 @@ func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool
 layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]?
 ```
 方法去获取之后的cell的位置。
+
+### UICollectionViewDelegateFlowLayout
+
+自定义布局
+
+```swift
+		/// 通过 IndexPath 可以自定义每个 cell 的 size
+    optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+
+    /// 设置每个 section 的偏移
+    optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets
+
+    /// 不同 section 中的 cell 可以有不同的最小行间距
+    optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
+
+    /// 不同 section 中的 cell 可以有不同的最小邻间距
+    optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
+
+    // 设置 section header 的大小
+    optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize
+
+    // 设置 section footer 的大小
+    optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize
+```
+
+
 
 
 ## UIApplication
