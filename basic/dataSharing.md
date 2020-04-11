@@ -42,5 +42,20 @@ URL 格式 `scheme://host/path?query#fragment`
 * 除非进行数据加密，否则不要存储隐私数据。
 * 不要存储大量数据，消耗内存，需要额外时间进行读写。
 * 如果在应用内需要使用敏感数据，可注册UIApplication 通知，在将要进入后的时候清空粘贴板。
-* 
+
+### 3. UIDocumentInteractionController
+
+允许应用利用设备上其他应用打开文档，支持预览、打印、邮件、付印文档。
+
+### 4. UIActivityViewController
+
+可以共享：NSString、NSAttributeString、NSURL、UIImage、ALAsset和符合UIActivityItemSource的自定义对象。
+
+### 5. iOS8 应用扩展 Share Extension
+
+
+
+
+
+
 
