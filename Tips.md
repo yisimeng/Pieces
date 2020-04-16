@@ -270,7 +270,7 @@ _ = overlayClass?.perform(NSSelectorFromString("prepareDebuggingOverlay"))
 ##### 28、找不到CAMetalLayer
 
 原因：需要连接真机。
- 
+
 ##### 29、tableView报错：failed to obtain a cell from its dataSource
 
 * xib的cell没有注册。 
@@ -513,9 +513,13 @@ payload中 content-available = 1，表明会告诉系统，远程推送不应展
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 ```
 
+##### 57、UNNotificationAttachment 附件内容通知
 
+UNNotificationAttachment（附件通知）是指可以包含音频，图像或视频内容，并且可以将其内容显示出来的通知。使用本地通知时，可以在通知创建时，将附件加入即可。
 
+创建附件的方法是`attachmentWithIdentifier:URL:options:error:`。在使用时，必须指定使用文件附件的内容，并且文件格式必须是支持的类型之一。
 
+**URL必须是一个有效的文件路径**
 
 
 
