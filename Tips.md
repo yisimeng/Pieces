@@ -521,7 +521,48 @@ UNNotificationAttachment（附件通知）是指可以包含音频，图像或�
 
 **URL必须是一个有效的文件路径**
 
+##### 58、 WKWebView Cookie
 
+UIWebView 会共享 NSHTTPCookieStorage 中的Cookie，WKWebView需要手动注入Cookie。
+
+iOS 11 之后可以通过WKWebsiteDataStore，实现Cookie的存取。
+
+```objective-c
+// 注入Cookie
+[self.webView.configuration.websiteDataStore.httpCookieStore setCookie:newCookie completionHandler:nil];
+// 查询Cookie
+[self.webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
+}];
+
+```
+
+在iOS 11 之前注入 Cookie：
+
+```objective-c
+// 初始化Cookie，注意格式，注意domain
+NSString * cookieString = [NSString stringWithFormat:@"document.cookie='%@=%@;Domain=%@; Path=%@;'", cookie.name, cookie.value, cookie.domain, cookie.path];
+// cookie script，
+WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:qstring injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+// user content
+WKUserContentController *userContentController = [[WKUserContentController alloc] init];
+// 添加脚本
+[userContentController addUserScript:qscript];
+
+// 在load request 之前再次设置Cookie，解决首次请求没有cookie的情况
+[request addValue:[NSString stringWithFormat:@"%@=%@",cookie.name,cookie.value] forHTTPHeaderField:@"Cookie"];
+
+```
+
+上述代码可以解决同域后续请求的Cookie问题，但是无法解决跨域问题，下面可以实现跨域注入Cookie：
+
+```
+// 拦截网页请求，将Cookie添加到navigationAction.request.allHTTPHeaderFields中，重新load
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+```
+
+WKWebView 不会将Cookie写入NSHTTPCookieStorage中（网上资料：会写入，但是有延迟。测试1天，未发现写入）。FireFox工程师建议通过重置WKProcessPool，来强制将Cookie同步到NSHTTPCookieStorage（网上：只能真机，未实验），确认模拟器下没有作用。
+
+iOS11 之前WKWebView 读取Cookie 未实现。
 
 
 
