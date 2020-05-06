@@ -118,7 +118,7 @@ git stash drop stash@{num} 移除指定存储。
 使用以下代码，为git log 定义别名：git lg
 
 ```bash
-git config --global alias.lg "log --no-merges --color --graph --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Cblue %s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit"
+git config --global alias.lg "log --no-merges --color --graph --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(yellow)%h%Creset -%C(green)%d %s %C(cyan)(%cd) %C(dim green)<%an>%Creset' --abbrev-commit"
 ```
 
 
