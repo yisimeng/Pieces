@@ -113,6 +113,18 @@ git stash drop stash@{num} 移除指定存储。
 
 [扩展库命令详解](https://github.com/tj/git-extras/blob/master/Commands.md)
 
+#### 单行输出git log
+
+使用以下代码，为git log 定义别名：git lg
+
+```bash
+git config --global alias.lg "log --no-merges --color --graph --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Cblue %s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit"
+```
+
+
+
+
+
 ## 参考
 
 http://www.runoob.com/git/git-tutorial.html
