@@ -57,6 +57,7 @@
 	```
 	#pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
+	```
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self performSelector:@selector(updateConstraint) withObject:nil afterDelay:0.1];
 }
@@ -72,6 +73,7 @@
 #pragma clang diagnostic pop
 	```
 	
+	```
 6. -fprofile-instr-generate
 
 	OC 项目使用 protobuf 添加了 libProtocolBuffers.a，使用 Xcode 编译报错：
@@ -88,7 +90,15 @@
 	-fprofile-instr-generate=<file>
                           Generate instrumented code to collect execution counts into <file>
                           (overridden by LLVM_PROFILE_FILE env var)
-  -fprofile-instr-generate
+    -fprofile-instr-generate
                           Generate instrumented code to collect execution counts into default.profraw file
                           (overridden by '=' form of option or LLVM_PROFILE_FILE env var)
 	```
+
+7. Unable to install "xxxx" 编译成功，安装到真机上失败
+
+   多种原因可能导致这个问题：
+
+   * 应用包含 App Extension ，并且App Extension有非法的bundle id。App Extension的bundle id 必须是以容器App的bundle id为前缀，加上'.xxxx'，作为App Extension的bundleid。
+
+   
