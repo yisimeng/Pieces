@@ -132,6 +132,24 @@ GOP的第一帧通常是关键帧，直播服务器支持GOP缓存，播放器�
 * +load():通常用来进行Method Swizzle，尽量避免过于复杂以及不必要的代码。
 * +initialize():一般用于初始化全局变量或静态变量。
 
+> Tips： 为什么 + (void)load 方法都会执行，没有被覆盖。
+>
+> 因为load方法是 runtime 直接调用方法列表中load的方法地址，而不是通过消息机制调用的。
+>
+> ```c
+> static void call_class_loads(void){
+> 		...
+>     for (i = 0; i < used; i++) {
+> 				...
+>         if (PrintLoading) {
+>             _objc_inform("LOAD: +[%s load]\n", cls->nameForLogging());
+>         }
+>         (*load_method)(cls, SEL_load);
+>     }
+> 		...
+> }
+> ```
+
 ##### 13、约束布局优先级
 
 当两个控件并排的时候，如果需要优先满足其中之一，可以通过设置约束的优先级来控制。有两个方法：
