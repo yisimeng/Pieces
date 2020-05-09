@@ -91,18 +91,73 @@ clang main.o main
 
 总结完整流程：
 
-* 将编译信息写入辅助文件，创建文件架构 .app 文件
-* 处理文件打包信息
+* 将编译信息写入辅助文件（Write Auxiliary file），创建文件架构 .app 文件。
+
+  ```shell
+  WriteAuxiliaryFile /.../QHLoginSDKDemo.build/DerivedSources/Entitlements-Simulated.plist (in target 'QHLoginSDKDemo' from project 'QHLoginSDKDemo')
+      cd /ProjectPath
+      write-file /.../QHLoginSDKDemo.build/DerivedSources/Entitlements-Simulated.plist
+  ```
+
+* 处理文件打包信息。（Process product packaging）
+
+  ```shell
+  ProcessProductPackaging "" /.../QHLoginSDKDemo.build/QHLoginSDKDemo.app-Simulated.xcent (in target 'QHLoginSDKDemo' from project 'QHLoginSDKDemo')
+      cd /Users/duanzengguang/Desktop/path/iOS_SDK_Demo
+      
+  Entitlements:
+  {
+      "application-identifier" = "xxxxx.xxxx.xxx.x.xx";
+      "com.apple.developer.applesignin" =     (
+          Default
+      );
+      "com.apple.developer.associated-domains" =     (
+          "applinks:xxx.xxx.xxx.xx"
+      );
+  }
+  
+      builtin-productPackagingUtility -entitlements -format xml -o /..../QHLoginSDKDemo.build/QHLoginSDKDemo.app-Simulated.xcent
+  ```
+
 * 执行CocoaPods编译前脚本，checkPods Manifest.lock
-* 编译.m文件，使用CompileC和clang命令
-* 链接器链接所需要的Framework
-* 编译xib
-* 编译资源文件
-* 编译ImageAsset
+
+* 编译.m文件，使用CompileC和clang命令 (Compile xxx.m)
+
+* 链接器链接所需要的Framework。
+
+  * 写入链接文件信息。（Process product packaging） 
+
+    ```
+    WriteAuxiliaryFile /.../QHLoginSDKDemo.LinkFileList
+    ```
+
+  * 链接所有的Framework
+
+  * 拷贝静态库的资源文件
+
+    ```
+    CpResource .../xxx.AliPay.bundle
+    ```
+
+* 编译ImageAsset。Compile Asset catalogs
+
+* 编译.xib/.storeboard
+
 * 处理Info.plist
+
+* 链接Storeboard。
+
 * 执行CocoaPods脚本
-* 拷贝标准库
+
+* 拷贝标准库（？）
+
 * 创建 .app 文件和签名
+
+* Touch 
+
+```
+Touch /..../QHLoginSDKDemo.app
+```
 
 ### 2 IR
 
