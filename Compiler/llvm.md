@@ -174,3 +174,11 @@ LLVM 会跟runtime桥接，类型包括：
 * \_\_block 和 \_\_weak 的处理。
 * \_\_block_invoke。
 * ARC处理包括插入 objc_storeStrong 和 objc_storeWeak 等ARC代码；ObjcAutoreleasePoolStmt 转 objc_autoreleasePoolPush/Pop;自动添加[super dealloc]; 给每个ivar的类合成 .cxx_destructor 方法，自动释放类的成员变量。
+
+### 3. Link Map File
+
+Build Settings 中设置 Write Link Map File 为Yes后，会在指定不目录下生成的.txt文件。包含以下内容：
+
+* **Object file**: .m 文件编译后的 .o 文件和需要链接的 .a 文件，前面是文件编号，后面是文件路径。
+* **Section**: 描述每个 Section 在可执行文件中的位置和大小。每个Section分为 \__TEXT 代码段 和 __DATA 数据段。
+* **Symbol**: 对Section进行再划分，并描述了所有的method、ivar、string，以及他们对应的 address、size、file number信息。
