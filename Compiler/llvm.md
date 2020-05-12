@@ -182,3 +182,6 @@ Build Settings 中设置 Write Link Map File 为Yes后，会在指定不目录�
 * **Object file**: .m 文件编译后的 .o 文件和需要链接的 .a 文件，前面是文件编号，后面是文件路径。
 * **Section**: 描述每个 Section 在可执行文件中的位置和大小。每个Section分为 \__TEXT 代码段 和 __DATA 数据段。
 * **Symbol**: 对Section进行再划分，并描述了所有的method、ivar、string，以及他们对应的 address、size、file number信息。
+
+> 默认指定文件路径地址是编译产物目录Products的同级目录文件`Intermediates.noindex/xxx.build/Debug-iphonesimulator/xxx.build/xxx-LinkMap-normal-x86_64.txt`。
+
