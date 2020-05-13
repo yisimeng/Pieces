@@ -33,6 +33,7 @@ static void YYTransactionSetup() {
         CFRunLoopRef runloop = CFRunLoopGetMain();
         CFRunLoopObserverRef observer;
         observer = CFRunLoopObserverCreate(CFAllocatorGetDefault(),
+                                           // 注册runloop 的 before waiting 和 exit 通知
                                            kCFRunLoopBeforeWaiting | kCFRunLoopExit,
                                            true,      // repeat
                                            0xFFFFFF,  // after CATransaction(2000000)
