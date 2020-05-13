@@ -182,17 +182,20 @@
       	// 重新创建一个字典
         _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         
-      // 在主线程或子线程中释放元素
+      // 是否为异步释放
         if (_releaseAsynchronously) {
+          // 异步在主线程或子线程中释放元素
             dispatch_queue_t queue = _releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
             dispatch_async(queue, ^{
                 CFRelease(holder); // hold and release in specified queue
             });
         } else if (_releaseOnMainThread && !pthread_main_np()) {
+          // 如果指定在主线程同步释放缓存，而且当前又是在主线程，这里做了个容错处理，改用异步
             dispatch_async(dispatch_get_main_queue(), ^{
                 CFRelease(holder); // hold and release in specified queue
             });
         } else {
+          // 直接释放
             CFRelease(holder);
         }
     }
@@ -219,7 +222,7 @@
         [self _trimRecursively];
     });
 }
-
+// 异步修剪
 - (void)_trimInBackground {
     dispatch_async(_queue, ^{
       // 减到合适的内存消耗
@@ -248,16 +251,20 @@
     // 生成临时数组，保存将要删除的节点
     NSMutableArray *holder = [NSMutableArray new];
     while (!finish) {
+      // 尝试加锁
         if (pthread_mutex_trylock(&_lock) == 0) {
+          // 如果现存数据量大于限制
             if (_lru->_totalCost > costLimit) {
+              // 把将要删除的元素取出，放到将要删除的数组中
                 _YYLinkedMapNode *node = [_lru removeTailNode];
                 if (node) [holder addObject:node];
             } else {
+              // 修剪到限制范围内，跳出循环
                 finish = YES;
             }
             pthread_mutex_unlock(&_lock);
         } else {
-          // 停顿10ms?
+          // 未能获取到锁，停顿10ms后重新尝试获取锁
             usleep(10 * 1000); //10 ms
         }
     }
@@ -270,14 +277,16 @@
         });
     }
 }
-
+// 按内存个数修剪，具体思路与按内存相同
 - (void)_trimToCount:(NSUInteger)countLimit {
     BOOL finish = NO;
     pthread_mutex_lock(&_lock);
+  // 如果限制为0，直接移除所有
     if (countLimit == 0) {
         [_lru removeAll];
         finish = YES;
     } else if (_lru->_totalCount <= countLimit) {
+      // 个数未达到限制
         finish = YES;
     }
     pthread_mutex_unlock(&_lock);
@@ -304,15 +313,17 @@
         });
     }
 }
-
+// 按时间修剪
 - (void)_trimToAge:(NSTimeInterval)ageLimit {
     BOOL finish = NO;
+  // 获取绝对时间，CACurrentMediaTime不受系统时间影响，为从开机到现在（不包含休眠）的时间（单位：秒）
     NSTimeInterval now = CACurrentMediaTime();
     pthread_mutex_lock(&_lock);
     if (ageLimit <= 0) {
         [_lru removeAll];
         finish = YES;
     } else if (!_lru->_tail || (now - _lru->_tail->_time) <= ageLimit) {
+      // 当前没有数据，或者最后一条数据在限制之内，直接返回
         finish = YES;
     }
     pthread_mutex_unlock(&_lock);
@@ -339,7 +350,7 @@
         });
     }
 }
-
+// 监听到内存警告，将自身回调出去，可由开发者手动调用释放内存。默认为无回调，自动移除所有缓存对象
 - (void)_appDidReceiveMemoryWarningNotification {
     if (self.didReceiveMemoryWarningBlock) {
         self.didReceiveMemoryWarningBlock(self);
@@ -348,7 +359,7 @@
         [self removeAllObjects];
     }
 }
-
+// 进入后台，将自身回调出去。默认进入后台自动释放所有缓存对象
 - (void)_appDidEnterBackgroundNotification {
     if (self.didEnterBackgroundBlock) {
         self.didEnterBackgroundBlock(self);
@@ -365,14 +376,14 @@
     pthread_mutex_init(&_lock, NULL);
     _lru = [_YYLinkedMap new];
     _queue = dispatch_queue_create("com.ibireme.cache.memory", DISPATCH_QUEUE_SERIAL);
-    
+    // 默认缓存大小时间为无限大
     _countLimit = NSUIntegerMax;
     _costLimit = NSUIntegerMax;
     _ageLimit = DBL_MAX;
     _autoTrimInterval = 5.0;
     _shouldRemoveAllObjectsOnMemoryWarning = YES;
     _shouldRemoveAllObjectsWhenEnteringBackground = YES;
-    
+    // 监听内存警告和进入后台
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appDidReceiveMemoryWarningNotification) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appDidEnterBackgroundNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
@@ -386,47 +397,47 @@
     [_lru removeAll];
     pthread_mutex_destroy(&_lock);
 }
-
+// 当前缓存总个数
 - (NSUInteger)totalCount {
     pthread_mutex_lock(&_lock);
     NSUInteger count = _lru->_totalCount;
     pthread_mutex_unlock(&_lock);
     return count;
 }
-
+// 总内存消耗
 - (NSUInteger)totalCost {
     pthread_mutex_lock(&_lock);
     NSUInteger totalCost = _lru->_totalCost;
     pthread_mutex_unlock(&_lock);
     return totalCost;
 }
-
+// 是否是在主线程释放缓存，默认为NO
 - (BOOL)releaseOnMainThread {
     pthread_mutex_lock(&_lock);
     BOOL releaseOnMainThread = _lru->_releaseOnMainThread;
     pthread_mutex_unlock(&_lock);
     return releaseOnMainThread;
 }
-
+// 设置在主线程释放缓存
 - (void)setReleaseOnMainThread:(BOOL)releaseOnMainThread {
     pthread_mutex_lock(&_lock);
     _lru->_releaseOnMainThread = releaseOnMainThread;
     pthread_mutex_unlock(&_lock);
 }
-
+// 是否为异步释放
 - (BOOL)releaseAsynchronously {
     pthread_mutex_lock(&_lock);
     BOOL releaseAsynchronously = _lru->_releaseAsynchronously;
     pthread_mutex_unlock(&_lock);
     return releaseAsynchronously;
 }
-
+// 设置异步释放
 - (void)setReleaseAsynchronously:(BOOL)releaseAsynchronously {
     pthread_mutex_lock(&_lock);
     _lru->_releaseAsynchronously = releaseAsynchronously;
     pthread_mutex_unlock(&_lock);
 }
-
+// 是否包含对象，通过CFDictionaryContainsKey判断
 - (BOOL)containsObjectForKey:(id)key {
     if (!key) return NO;
     pthread_mutex_lock(&_lock);
@@ -434,40 +445,48 @@
     pthread_mutex_unlock(&_lock);
     return contains;
 }
-
+// 通过key获取缓存对象
 - (id)objectForKey:(id)key {
     if (!key) return nil;
     pthread_mutex_lock(&_lock);
     _YYLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
     if (node) {
+      // 如果node存在，修改使用时间，并将其放到头部
         node->_time = CACurrentMediaTime();
         [_lru bringNodeToHead:node];
     }
     pthread_mutex_unlock(&_lock);
     return node ? node->_value : nil;
 }
-
+// 添加缓存对象
 - (void)setObject:(id)object forKey:(id)key {
     [self setObject:object forKey:key withCost:0];
 }
-
+// 添加缓存对象
 - (void)setObject:(id)object forKey:(id)key withCost:(NSUInteger)cost {
+  // key不存在，直接返回
     if (!key) return;
+  // 如果对象为空，认为是要删除缓存，则从缓存中移除对应的条目
     if (!object) {
         [self removeObjectForKey:key];
         return;
     }
     pthread_mutex_lock(&_lock);
+  // 通过key 获取对应缓存对象
     _YYLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
     NSTimeInterval now = CACurrentMediaTime();
     if (node) {
+      // 如果对象已在缓存中，则更新总内存消耗
         _lru->_totalCost -= node->_cost;
         _lru->_totalCost += cost;
+      // 重新设置node的信息
         node->_cost = cost;
         node->_time = now;
         node->_value = object;
+      // 将node放到头
         [_lru bringNodeToHead:node];
     } else {
+      // 缓存中没有对象，插入对象
         node = [_YYLinkedMapNode new];
         node->_cost = cost;
         node->_time = now;
@@ -475,6 +494,7 @@
         node->_value = object;
         [_lru insertNodeAtHead:node];
     }
+  // 检测是否超出内存消耗限制、数量限制
     if (_lru->_totalCost > _costLimit) {
         dispatch_async(_queue, ^{
             [self trimToCost:_costLimit];
@@ -495,7 +515,7 @@
     }
     pthread_mutex_unlock(&_lock);
 }
-
+// 释放指定缓存对象
 - (void)removeObjectForKey:(id)key {
     if (!key) return;
     pthread_mutex_lock(&_lock);
@@ -515,13 +535,13 @@
     }
     pthread_mutex_unlock(&_lock);
 }
-
+// 释放所有元素
 - (void)removeAllObjects {
     pthread_mutex_lock(&_lock);
     [_lru removeAll];
     pthread_mutex_unlock(&_lock);
 }
-
+// 释放至指定个数
 - (void)trimToCount:(NSUInteger)count {
     if (count == 0) {
         [self removeAllObjects];
@@ -529,15 +549,14 @@
     }
     [self _trimToCount:count];
 }
-
+// 释放至指定内存大小
 - (void)trimToCost:(NSUInteger)cost {
     [self _trimToCost:cost];
 }
-
+// 释放至指定时间段内
 - (void)trimToAge:(NSTimeInterval)age {
     [self _trimToAge:age];
 }
-
 - (NSString *)description {
     if (_name) return [NSString stringWithFormat:@"<%@: %p> (%@)", self.class, self, _name];
     else return [NSString stringWithFormat:@"<%@: %p>", self.class, self];
