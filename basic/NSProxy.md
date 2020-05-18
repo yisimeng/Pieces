@@ -20,6 +20,14 @@ NSObject 和 NSProxy 是OC中的两个根类。
 
 NSProxy实现了NSObject协议，实现了跟类所需要的基本方法。抽象类不需要提供初始化方法，它在接收到不能响应的方法后会抛出异常。因此，它的具体实现子类必须停工一个初始化方法，并重写`forwardInvocation(_:)`方法和`methodSignatureForSelector:`来处理他自己没有实现的消息，即将消息转发给真正的对象。
 
+#### NSProxy 与 NSObject 消息转发
+
+NSProxy 做消息转发效率更高。
+
+NSObject：本类->父类->根类->动态方法解析->消息转发；
+
+NSProxy：本类->消息转发。
+
 ### 用途
 
 1. 模拟多继承。NSProxy把多个类的消息，转发给实现了这些方法的对象。并非是真正的多继承。
