@@ -19,7 +19,7 @@ HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTT
 
 #### 为什么Charles还可以进行HTTPS抓包？
 
-这是由于在抓包之前需要在Mac上和iPhone上安装证书并信任，配置iPhone代理，iPhone 发起的请求需要通过 Mac 上的 Charles。
+这是由于在抓包之前需要在Mac上和iPhone上安装证书并信任，**配置iPhone代理**，iPhone 发起的请求需要通过 Mac 上的 Charles。
 
 1. 客户端发起握手请求；
 2. Charles拦截请求，并将请求内容进行提取，然后自身模仿客户端向服务器发起请求；
@@ -32,5 +32,22 @@ HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTT
 
 > 在客户端与Charles的交互过程中，Charles始终充当服务器的角色；而在Charles接收到客户端的请求之后，又会将自己伪装成客户端的角色，向服务器发送请求。
 
+##### 如何防止HTTPS进行抓包
 
+从上述Charles抓包HTTPS请求的过程中有一步，是设置代理，网络请求都需要经过Mac。所以判断当前如果是被设置了代理了，就有可能被抓包。
+
+判断代理方法：
+
+```objective-c
++ (BOOL)getProxyStatus {
+    CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
+    const CFStringRef proxyCFstr = CFDictionaryGetValue(dicRef, (const void*)kCFNetworkProxiesHTTPProxy);
+    CFRelease(dicRef);
+    NSString *proxy = (__bridge NSString*)(proxyCFstr);
+    if(proxy) {
+        return YES;
+    }
+    return NO;
+}
+```
 
