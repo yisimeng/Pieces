@@ -582,6 +582,14 @@ WKWebView 不会将Cookie写入NSHTTPCookieStorage中（网上资料：会写入
 
 iOS11 之前WKWebView 读取Cookie 未实现。
 
+##### 59、 命令行启动iOS模拟器
+
+```shell
+$ open -a Simulator
+```
+
+
+
 
 
 
