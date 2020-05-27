@@ -21,10 +21,6 @@ Flutter：有自己的渲染引擎。iOS与Android平台保持一致性。
 
 
 
-
-
-
-
 1. [Material](https://material.io/guidelines/) 是一种标准的移动端和web端的视觉设计语言。 Flutter提供了一套丰富的Material widgets。
 
 2. **Widget** Flutter 中大部分东西都是 Widget，包括对齐(alignment)、填充(padding)和布局(layout)等。
