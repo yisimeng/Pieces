@@ -34,7 +34,7 @@ Flutter：有自己的渲染引擎。iOS与Android平台保持一致性。
 
 3. **Scaffold** 是 Material library 中提供的一个widget, 它提供了默认的导航栏、标题和包含主屏幕widget树的body属性。widget树可以很复杂。widget的主要工作是提供一个build()方法来描述如何根据其他较低级别的widget来显示自己。
 
-4. 三种布局
+4. 多控件的三种布局
 
    Row，Column，Stack，三种布局方式，都有children属性，子部件按照不同方向布局。
 
@@ -99,4 +99,12 @@ Positioned 布局是相对与**父视图**的。
 **AspectRatio 宽高比布局**： 需要设置aspectRatio属性
 
 
+
+#### **StateFulWidget**
+
+> 内部会全部渲染，所以尽可能少用。
+
+
+
+**手势**： `onTap`,`onTapDown`,`onTapCancel`
 
