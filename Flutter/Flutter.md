@@ -30,7 +30,7 @@ Flutter：有自己的渲染引擎。iOS与Android平台保持一致性。
 
    > StatefulWidget 需要两个类实现，StatefulWidget类 和State类。
    >
-   > State类声明时，`class _RandomWordsState extends State<RandomWords>` 中的 <RandomWords> 是泛型，关联StatefulWidget类。
+   > State类声明时，`class _RandomWordsState extends State<RandomWords>` 中的 <RandomWords> 是泛型，关联StatefulWidget类。在State类中可以通过widget来获取当前的StatefulWidget对象。
 
 3. **Scaffold** 是 Material library 中提供的一个widget, 它提供了默认的导航栏、标题和包含主屏幕widget树的body属性。widget树可以很复杂。widget的主要工作是提供一个build()方法来描述如何根据其他较低级别的widget来显示自己。
 
@@ -108,3 +108,10 @@ Positioned 布局是相对与**父视图**的。
 
 **手势**： `onTap`,`onTapDown`,`onTapCancel`
 
+
+
+### Tips
+
+1. 取消按钮点击时的波纹效果
+
+   MaterialApp中的ThemeData 设置属性`highlightColor`和`splashColor`为透明。
