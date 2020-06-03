@@ -118,3 +118,18 @@ Positioned 布局是相对与**父视图**的。
 
 2. **MediaQuery.removePadding**
    Flutter会为某些Widget默认设置一些padding，使用它包裹可以设置去掉这些padding。
+
+3. 图片设置圆角
+
+   ```dart
+    Container(
+                 width: 200,
+                 height: 100,
+                 child: ClipRRect(
+                   borderRadius: BorderRadius.circular(20),
+                   child: Image.asset('images/jicheng.png'),
+                 )
+               )
+   ```
+
+4. State 类的初始化方法：`void initState() {}` 只会调用一次。
