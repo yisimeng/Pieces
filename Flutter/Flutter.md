@@ -115,3 +115,6 @@ Positioned 布局是相对与**父视图**的。
 1. 取消按钮点击时的波纹效果
 
    MaterialApp中的ThemeData 设置属性`highlightColor`和`splashColor`为透明。
+
+2. **MediaQuery.removePadding**
+   Flutter会为某些Widget默认设置一些padding，使用它包裹可以设置去掉这些padding。
