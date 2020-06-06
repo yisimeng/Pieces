@@ -4,20 +4,28 @@ React Native：是基于原生的封装。iOS与Android的区别导致兼容性�
 
 Flutter：有自己的渲染引擎。iOS与Android平台保持一致性。
 
-1. #### 创建flutter工程
+##### 1. 性能
 
-   1. Android Studio
+1.1 Flutter App 使用Dart开发。Dart在JIT（即时编译）下与JavaScript差不多，另外Dart还支持AOT（预先编译）
 
-      安装好flutter和Dart插件之后，打开Android Studio ，选择**New Flutter Project**。
+1.2 Flutter使用自己的渲染引擎绘制UI，进行布局等。所以不需要再RN那样在JavaScript和Native之间通信。在滑动时因为RN需要频繁的和native进行布局同步，体验上Flutter要更好一些。
 
-   2. Terminal
 
-      ```shell
-      # 直接创建工程（语言默认为Swift 和 Kotlin）
-      $ flutter create myapp
-      # 指定平台语言(i:iOS, a: Android)
-      $ flutter create -i objc -a java myapp
-      ```
+
+#### 2. 创建flutter工程
+
+1. Android Studio
+
+   安装好flutter和Dart插件之后，打开Android Studio ，选择**New Flutter Project**。
+
+2. Terminal
+
+   ```shell
+   # 直接创建工程（语言默认为Swift 和 Kotlin）
+   $ flutter create myapp
+   # 指定平台语言(i:iOS, a: Android)
+   $ flutter create -i objc -a java myapp
+   ```
 
 
 
