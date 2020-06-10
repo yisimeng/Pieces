@@ -121,7 +121,16 @@ git stash drop stash@{num} 移除指定存储。
 git config --global alias.lg "log --no-merges --color --graph --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(yellow)%h%Creset -%C(green)%d %s %C(cyan)(%cd) %C(dim green)<%an>%Creset' --abbrev-commit"
 ```
 
+### git rebase 流程
 
+#### 将某些修改添加到之前的某次commit中。
+
+1. git rebase <指定commit的前一个commit id> --interactive
+2. 将需要改动的commit 前的 pick改为 edit，保存退出
+3. 现在已经切换到指定的commit中了，进行修改。
+4. git add <修改的文件>
+5. git commit --amend
+6. git rebase --continue
 
 
 
