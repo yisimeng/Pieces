@@ -42,3 +42,58 @@ Notification Content Extension 管理了一个视图控制器，继承自UIViewC
 * 实现了 **UNNotificationContentExtension** 的代理方法：`\- (void)didReceiveNotification:(UNNotification *)notification`,获取到通知内容后可以给自定义view赋值。
 * **UNNotificationContentExtension** 的可选方法：`\- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption))completion` 收到通知扩展的事件响应，这个可以配合。
 
+## UNNotificationCategory
+
+[文档](https://developer.apple.com/documentation/usernotifications/declaring_your_actionable_notification_types)
+
+通过 Category 对通知进行区分，以显示不同的页面按钮。
+
+在离线状态下，接收到通知之后，不用启动应用即可进行一些快速处理。
+
+#### UNNotificationAction & UNTextInputNotificationAction
+
+显示通知详情时（长按或者左滑查看），支持的快捷操作按钮。
+
+UNTextInputNotificationAction 快捷回复输入操作。
+
+一个Category可以包含多个Action，但如果只有一个Action且为 **UNTextInputNotificationAction** 时，将直接弹出键盘。
+
+### 实现步骤
+
+#### 1. 声明自定义操作和通知类型
+
+在应用启动时设置支持的通知类型，可以定义多个类型的Category，分别有不同的自定义操作。
+
+`[[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories: [NSSet setWithObjects:noneCategory, commentCategory, messageCategory, nil]];`
+
+#### 2. 接收自定义操作响应
+
+一般可在 AppDelegate 中设置 `[UNUserNotificationCenter currentNotificationCenter] `的代理，实现 UNUserNotificationCenterDelegate 代理方法用以接收事件响应：
+
+`\- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler `
+
+#### 3. 离线推送支持自定义操作
+
+在NotificationContent 的 Info.plist 文件中，找到 NSExtension -> NSExtensionAttributes -> UNNotificationExtensionCategory 字段。
+
+UNNotificationExtensionCategory 对应的value，如果只有一个Category的话，可以使String，如果多个Category，则为Array，设置 Category 的 identifier。
+
+在 NotificationViewController 的 `\- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption))completion`方法中处理事件回调。
+
+#### 举例
+
+应用可能收到的推送信息有：IM消息，朋友动态消息（类似朋友圈），系统通知。
+
+不同消息类型的自定义操作也不同：
+
+* IM消息：长按快捷回复。
+* 朋友动态消息：点赞、评论。
+* 系统通知：不需要快捷操作。
+
+就可以根据消息类型分别设置Category的Identifier：
+
+* IM消息：category.message。
+* 朋友动态消息：category.comment。
+* 系统通知：category.system。
+
+最后在回调中去根据不同的category id 和 action id  进行处理。
