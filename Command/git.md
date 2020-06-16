@@ -132,7 +132,7 @@ git config --global alias.lg "log --no-merges --color --graph --date=format:'%Y-
 5. git commit --amend
 6. git rebase --continue
 
-
+> 删除某次commit： 第2步中将pick改成drop
 
 ## 参考
 
