@@ -80,6 +80,12 @@ UNNotificationExtensionCategory 对应的value，如果只有一个Category的�
 
 在 NotificationViewController 的 `\- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption))completion`方法中处理事件回调。
 
+#### 4. 发送通知
+
+本地通知：设置 **UNMutableNotificationContent** 的 **categoryIdentifier** 属性
+
+远程通知：在 **aps** 字段下添加 **category** 字段，并设置 identifier。
+
 #### 举例
 
 应用可能收到的推送信息有：IM消息，朋友动态消息（类似朋友圈），系统通知。
@@ -97,3 +103,4 @@ UNNotificationExtensionCategory 对应的value，如果只有一个Category的�
 * 系统通知：category.system。
 
 最后在回调中去根据不同的category id 和 action id  进行处理。
+
