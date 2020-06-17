@@ -1,8 +1,18 @@
+# App Extension
+
+应用扩展。
+
+#### 应用扩展中不可以做的的事情：
+
+1. 不可使用sharedApplication对象。
+2. 不能使用标记 NS_EXTENSION_UNAVAILABLE 的API。
+3. 运行一个长时间的后台任务（根据不同平台而异）
+
 ## 推送扩展
 
 推送扩展包含两个：Notification Service Extension 和 Notification Content Extension。
 
-## Notification Service Extension
+### Notification Service Extension
 
 [文档](https://developer.apple.com/documentation/usernotifications/modifying_content_in_newly_delivered_notifications)
 
@@ -23,7 +33,7 @@
 
 `didReceive(_:withContentHandler:)` 有大约**30s**的时间来进行数据处理，如果超时，系统将调用`serviceExtensionTimeWillExpire()`方法，必须立即向系统返回数据，否则系统将按原始数据进行展示。
 
-## Notification Content Extension
+### Notification Content Extension
 
 [文档](https://developer.apple.com/documentation/usernotificationsui/customizing_the_appearance_of_notifications)
 
@@ -42,7 +52,7 @@ Notification Content Extension 管理了一个视图控制器，继承自UIViewC
 * 实现了 **UNNotificationContentExtension** 的代理方法：`\- (void)didReceiveNotification:(UNNotification *)notification`,获取到通知内容后可以给自定义view赋值。
 * **UNNotificationContentExtension** 的可选方法：`\- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption))completion` 收到通知扩展的事件响应，这个可以配合。
 
-## UNNotificationCategory
+### UNNotificationCategory
 
 [文档](https://developer.apple.com/documentation/usernotifications/declaring_your_actionable_notification_types)
 
@@ -58,7 +68,7 @@ UNTextInputNotificationAction 快捷回复输入操作。
 
 一个Category可以包含多个Action，但如果只有一个Action且为 **UNTextInputNotificationAction** 时，将直接弹出键盘。
 
-### 实现步骤
+#### 实现步骤
 
 #### 1. 声明自定义操作和通知类型
 
