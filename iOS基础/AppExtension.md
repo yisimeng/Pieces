@@ -114,3 +114,13 @@ UNNotificationExtensionCategory 对应的value，如果只有一个Category的�
 
 最后在回调中去根据不同的category id 和 action id  进行处理。
 
+
+
+# 注意
+
+**Payload 大小不能超过4K**
+
+```
+Put the JSON payload with the notification’s content into the body of your request. The JSON payload must not be compressed and is limited to a maximum size of 4 KB (4096 bytes). For a Voice over Internet Protocol (VoIP) notification, the maximum size is 5 KB (5120 bytes).
+```
+
