@@ -131,5 +131,5 @@ Payload 过大，可能影响Push Content Extension 打开时命中categoryIdent
 2. **调试Notification Extension**
 
 * 宿主工程中是无法调试Extension的，可以选择Extension作为target进行编译运行，后需要选择宿主工程。
-* 菜单栏 -> Debug -> Attach to Process -> 选择Extension。
+* 菜单栏 -> Debug -> Attach to Process -> 选择Extension。如果列表中不存在AppExtension，需要先触发AppExtension，把进程调出来。
 
