@@ -114,11 +114,9 @@ UNNotificationExtensionCategory 对应的value，如果只有一个Category的�
 
 最后在回调中去根据不同的category id 和 action id  进行处理。
 
+### 注意
 
-
-# 注意
-
-**Payload 大小不能超过4K**
+1. **Payload 大小不能超过4K**
 
 ```
 Put the JSON payload with the notification’s content into the body of your request. The JSON payload must not be compressed and is limited to a maximum size of 4 KB (4096 bytes). For a Voice over Internet Protocol (VoIP) notification, the maximum size is 5 KB (5120 bytes).
@@ -129,4 +127,9 @@ Payload 过大，可能影响Push Content Extension 打开时命中categoryIdent
 > Payload尽量只传必要信息，非必要信息，可以通过点击之后，进行请求。
 >
 > 猜测： 如果Payload内容不可控，可以通过Notification Service Extension 进行拦截，重新创建Content，仅保留必要信息。
+
+2. **调试Notification Extension**
+
+* 宿主工程中是无法调试Extension的，可以选择Extension作为target进行编译运行，后需要选择宿主工程。
+* 菜单栏 -> Debug -> Attach to Process -> 选择宿主工程。
 
