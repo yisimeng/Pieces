@@ -19,7 +19,7 @@ CGFloat frameFormatterNumber(CGFloat number){
 
 当我们根据label中的文字,通过```- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(nullable NSDictionary<NSString *, id> *)attributes context:(nullable NSStringDrawingContext *)context```方法计算完之后在转换，获得准确的label的frame。
 
-##### 2. frame和bounds
+##### 2. frame和bounds 
 
 frame是相对于父视图，bounds是相对于子视图的。
 
