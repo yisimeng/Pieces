@@ -116,7 +116,13 @@ Positioned 布局是相对与**父视图**的。
 
 **手势**： `onTap`,`onTapDown`,`onTapCancel`
 
+### Flutter 与 native交互
 
+Flutter中定义了三种类型的Channel用于与native交互。
+
+- **BasicMessageChannel**：持续通信，用于传递字符串和半结构化的消息，收到消息后可以回复消息。
+- **MethodChannel**：单次方法调用，调用之后可以直接回传结果。如Flutter调用原生相机相册等；
+- **EventChannel**：持续通信，用于数据流的通信，但收到消息后不能回复消息。通常用户原生想Flutter传递手机电量变化、网络连接变化等。
 
 ### Tips
 
