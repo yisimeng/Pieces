@@ -120,14 +120,6 @@ git stash drop stash@{num} 移除指定存储。
 
 显示某个 commit_id 中的所有修改，后面可以跟具体的 filename。
 
-## 扩展 git-extras
-
-> GIT utilities -- repo summary, repl, changelog population, author commit percentages and more
-
-一个 git 的扩展库，扩展了更多的git功能。git-changelog、git rename-branch、git rename-tag等。
-
-安装：brew install git-extras
-
 [扩展库命令详解](https://github.com/tj/git-extras/blob/master/Commands.md)
 
 #### 单行输出git log
@@ -150,6 +142,26 @@ git config --global alias.lg "log --no-merges --color --graph --date=format:'%Y-
 6. git rebase --continue
 
 > 删除某次commit： 第2步中将pick改成drop
+
+### git pull request
+
+开发流程
+
+1. 从远程主开发分支拉取代码到本地（例如develop）；
+2. 从本地develop分出一个分支（例如：v1.0）进行开发；
+3. 开发完成 push 到远程对应的分支：v1.0；
+4. 创建 pull request，将 v1.0 合入到develop分支；
+5. 待他人review之后approved，再将代码merge 到develop分支。
+
+如果 review 发现问题：可以直接修改后提交到 v1.0分支，会自动合入当前的pull request中。
+
+## 扩展 git-extras
+
+> GIT utilities -- repo summary, repl, changelog population, author commit percentages and more
+
+一个 git 的扩展库，扩展了更多的git功能。git-changelog、git rename-branch、git rename-tag等。
+
+安装：brew install git-extras
 
 ## 参考
 
