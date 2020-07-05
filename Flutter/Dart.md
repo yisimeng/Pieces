@@ -56,4 +56,23 @@
     * **const**：编译时常量。
 
 9. await：之后的操作必须是异步，且当前函数必须是异步函数。 
+
+   async方法中，Future以及Future的then函数里的方法是异步，其他仍然为同步。
+
 10. **then** 之后的方法优先级比 Feature 默认的队列优先级高。
+
+11. isolate：隔离，Dart中的多线程，更像是一个进程，有独立内存控件，不需要担心多线程资源抢夺，不需要锁，使用port进行通信。compute方法就是封装的 isolate。
+
+
+
+## Dart 异步
+
+### Dart 的事件循环
+
+在Dart 中有两种队列：
+
+1. 事件队列（Event Queue），包含所有的外来事件：I/O，mouse events，drawing events，timers，isolate之间的信息传递。
+2. 微任务队列（Microtask Queue）表示一个在极短时间内会完成的异步任务。优先级最高，高于Event Queue，只要队列中有任务，就可以一直霸占时间循环。MicroTast Queue添加的任务主要是由Dart内部产生。
+
+> Future是事件队列
+
