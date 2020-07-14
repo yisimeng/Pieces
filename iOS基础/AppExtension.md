@@ -24,7 +24,7 @@
 * 可以下载多媒体数据，或者其他附件信息。
 * 通过整合来自用户设备的数据，更新通知的内容。
 
-> 扩展仅对开放alert的有效，如果在通知设置中，关闭了alert，将不会到达扩展。
+> 扩展仅对允许通知Alert的应用有效，如果在应用通知设置中，关闭了alert，将不会到达扩展。
 
 #### NotificationService 中默认的方法
 
@@ -66,7 +66,7 @@ Notification Content Extension 管理了一个视图控制器，继承自UIViewC
 
 UNTextInputNotificationAction 快捷回复输入操作。
 
-一个Category可以包含多个Action，但如果只有一个Action且为 **UNTextInputNotificationAction** 时，将直接弹出键盘。
+一个Category可以包含多个Action，但如果只有一个Action且为 **UNTextInputNotificationAction** 时，将直接弹出键盘。如果在NotificationServiceExtension中添加了attachment附件，将先显示回复按钮，点击之后弹出键盘。
 
 #### 实现步骤
 
