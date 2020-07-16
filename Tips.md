@@ -588,7 +588,11 @@ iOS11 之前WKWebView 读取Cookie 未实现。
 $ open -a Simulator
 ```
 
+##### 60、 UILabel adjustsFontSizeToFitWidth
 
+自动缩小字体，以适应最大的宽度。
+
+当文本显示不下时，自动缩放字体，以使能显示全部文本。
 
 
 
