@@ -594,6 +594,22 @@ $ open -a Simulator
 
 当文本显示不下时，自动缩放字体，以使能显示全部文本。
 
+##### 61、 NSUserDefault  synchronize
+
+synchronize 方法要被废弃了。
+
+```objective-c
+Summary
+
+Waits for any pending asynchronous updates to the defaults database and returns; this method is unnecessary and shouldn't be used.
+Declaration
+
+- (BOOL)synchronize;
+Returns
+
+YES if the data was saved successfully to disk, otherwise NO.
+```
+
 
 
 
