@@ -83,6 +83,12 @@ expr命令可以实现数值运算、数值或字符串比较、字符串匹配�
 current_dateTime="`date +%Y-%m-%d,%H:%m:%s`"
 echo $current_dateTime
 
+### 按照最后修改顺序排序当前目录文件
+
+```
+find . -mtime -1 -ls |sort -r
+```
+
 ## shell 参数格式
 
 内置命令getopts，帮助处理选项和参数，只能处理短选项，无法处理长选项
