@@ -24,7 +24,7 @@ CocoaPods 有一个开源的索引仓库[Specs](https://github.com/CocoaPods/Spe
 
 1. 在私有git上创建一个索引仓库，例：YSMSpecs，用于存放索引文件。
 2. 将远程索引库添加到本地，`pod repo add YSMSpecs YSMSpecs_source_url`。使用`pod repo`可以查看本地的索引仓库列表。
-    
+   
     ```
     $ pod repo add YSMSpecs https://github.com/yisimeng/YSMSpecs.git
     $ pod repo
@@ -68,6 +68,7 @@ CocoaPods 有一个开源的索引仓库[Specs](https://github.com/CocoaPods/Spe
        - Versions: 0.1.0 [YSMSpecs repo]
     ```
     
+
 到这里私有仓库是搞完了。
     
 > 第6步如果使用`pod trunk push YSMKit.podspec`，会将索引库推送到官方的Specs仓库中。
@@ -110,3 +111,7 @@ end
 ```
 
 `pre_install`：编译之前可以添加修改（还没想到可以做哪些事情）。
+
+4. 已经打包好上传完成的仓库，本地拉不下来，报错： fatal: Unable to create '/Users/duanzengguang/.cocoapods/repos/specs/.git/index.lock': File exists.
+
+将index.lock 删除。
