@@ -80,3 +80,15 @@ struct __CFRunLoop {
 * **NSRunLoopCommonModes/kCFRunLoopCommonModes:**这是一组可配置的通用模式。将input sources与该模式关联则同时也将input sources与该组中的其它模式进行了关联。对于Cocoa应用，该模式缺省的包含了default，modal以及event tracking模式。而Core Foundation则在初始化时只包含了default模式。你可以使用CFRunLoopAddCommonMode为该模式添加自定义的模式。
 
 > Common Mode：RunLoop 切换时，会自动将 _commonModeItems 里的 item，同步到具有 Common 标记的所有 Mode 里。将 timer 加入到 commom 中，RunLoop会将 commonModeItems 里的item 同步到所有具有Commom属性的Mode里，这样在 RunLoop 切换到UITrackingRunLoopMode中时，依然可以回调。
+
+
+
+#### CFRunLoopRunInMode Exit Codes
+
+```objective-c
+enum {
+  kCFRunLoopRunFinished = 1,	//没有sources或者timers需要处理
+  kCFRunLoopRunStopped = 2,	//CFRunloopStop在run loop中调用
+  kCFRunLoopRunTimedOut = 3,	//超时终止，固定的时间间隔已经过去了   
+  kCFRunLoopRunHandledSource = 4//sources已经被处理了,这个值返回的情况仅仅是当前run loop用于处理这个返回值只有当运行循环被告知只能运行到一个源进行处理。 };
+```
